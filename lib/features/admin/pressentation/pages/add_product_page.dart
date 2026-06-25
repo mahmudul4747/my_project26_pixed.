@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../data/services/product_service.dart';
 import '../../data/models/product_model.dart';
+import '../../data/services/product_service.dart';
 
 class AddProductPage extends StatefulWidget {
   const AddProductPage({super.key});
@@ -23,24 +23,38 @@ class _AddProductPageState extends State<AddProductPage> {
     final name = nameController.text.trim();
     final priceText = priceController.text.trim();
     final category = categoryController.text.trim();
-    final imageUrl = imageController.text.trim();
+
+    String imageUrl = imageController.text.trim();
 
     if (name.isEmpty || priceText.isEmpty || category.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('All fields are required')),
+        const SnackBar(
+          content: Text('Name, Price and Category are required'),
+        ),
       );
       return;
     }
 
     final price = double.tryParse(priceText);
-    if (price == null) {
+
+    if (price == null || price <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid price')),
+        const SnackBar(
+          content: Text('Please enter a valid price'),
+        ),
       );
       return;
     }
 
-    setState(() => isLoading = true);
+    // Default image if user leaves image field empty
+    if (imageUrl.isEmpty) {
+      imageUrl =
+          'https://via.placeholder.com/150';
+    }
+
+    setState(() {
+      isLoading = true;
+    });
 
     try {
       final product = ProductModel(
@@ -56,8 +70,15 @@ class _AddProductPageState extends State<AddProductPage> {
 
       if (!mounted) return;
 
+      nameController.clear();
+      priceController.clear();
+      categoryController.clear();
+      imageController.clear();
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Product Added Successfully')),
+        const SnackBar(
+          content: Text('Product Added Successfully'),
+        ),
       );
 
       Navigator.pop(context);
@@ -65,11 +86,15 @@ class _AddProductPageState extends State<AddProductPage> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(
+          content: Text('Error: $e'),
+        ),
       );
     } finally {
       if (mounted) {
-        setState(() => isLoading = false);
+        setState(() {
+          isLoading = false;
+        });
       }
     }
   }
@@ -86,37 +111,61 @@ class _AddProductPageState extends State<AddProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Add Product")),
-      body: Padding(
+      appBar: AppBar(
+        title: const Text("Add Product"),
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
+              decoration: const InputDecoration(
+                labelText: 'Product Name',
+                border: OutlineInputBorder(),
+              ),
             ),
+
+            const SizedBox(height: 12),
+
             TextField(
               controller: priceController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Price'),
-            ),
-            TextField(
-              controller: categoryController,
-              decoration: const InputDecoration(labelText: 'Category'),
-            ),
-            TextField(
-              controller: imageController,
-              decoration: const InputDecoration(labelText: 'Image URL'),
+              decoration: const InputDecoration(
+                labelText: 'Price',
+                border: OutlineInputBorder(),
+              ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
+
+            TextField(
+              controller: categoryController,
+              decoration: const InputDecoration(
+                labelText: 'Category',
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            TextField(
+              controller: imageController,
+              decoration: const InputDecoration(
+                labelText: 'Image URL (Optional)',
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            const SizedBox(height: 24),
 
             SizedBox(
               width: double.infinity,
+              height: 50,
               child: ElevatedButton(
                 onPressed: isLoading ? null : saveProduct,
                 child: isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
+                    ? const CircularProgressIndicator()
                     : const Text("Save Product"),
               ),
             ),

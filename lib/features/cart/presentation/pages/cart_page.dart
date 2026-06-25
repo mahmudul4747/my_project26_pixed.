@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 
 
@@ -28,12 +29,14 @@ class CartPage extends ConsumerWidget {
                       final item = cartItems[index];
 
                       return ListTile(
-                        leading: Image.network(
-                          item.imageUrl,
-                          width: 50,
-                          errorBuilder: (_, __, ___) =>
-                              const Icon(Icons.fastfood),
-                        ),
+                        leading: item.imageUrl.trim().isEmpty
+                          ? const Icon(Icons.fastfood)
+                          : Image.network(
+                              item.imageUrl,
+                              width: 50,
+                              errorBuilder: (_, __, ___) =>
+                                  const Icon(Icons.fastfood),
+                            ),
                         title: Text(item.name),
                         subtitle: Text(
                           "৳ ${item.price} x ${item.quantity}",
@@ -83,10 +86,7 @@ class CartPage extends ConsumerWidget {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              '/checkout',
-                            );
+                            context.push('/checkout');
                           },
                           child: const Text("Checkout"),
                         ),

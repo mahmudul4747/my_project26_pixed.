@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_project26_fixed/features/admin/data/models/product_model.dart';
 import 'package:my_project26_fixed/features/admin/data/services/product_service.dart';
 
-
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
 
@@ -14,11 +13,9 @@ class MenuPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Menu'),
       ),
-
       body: StreamBuilder<List<ProductModel>>(
         stream: productService.getProductsStream(),
         builder: (context, snapshot) {
-
           if (snapshot.connectionState ==
               ConnectionState.waiting) {
             return const Center(
@@ -45,24 +42,26 @@ class MenuPage extends StatelessWidget {
           return ListView.builder(
             itemCount: products.length,
             itemBuilder: (context, index) {
-
               final product = products[index];
 
               return Card(
                 margin: const EdgeInsets.all(8),
-
                 child: ListTile(
-                  leading: const Icon(
-                    Icons.fastfood,
-                  ),
+                  leading: product.imageUrl.trim().isEmpty
+                      ? const Icon(Icons.fastfood)
+                      : Image.network(
+                          product.imageUrl,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                          errorBuilder:
+                              (_, __, ___) =>
+                                  const Icon(Icons.fastfood),
+                        ),
 
-                  title: Text(
-                    product.name,
-                  ),
+                  title: Text(product.name),
 
-                  subtitle: Text(
-                    product.category,
-                  ),
+                  subtitle: Text(product.category),
 
                   trailing: Text(
                     '${product.price} Tk',
