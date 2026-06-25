@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
+import 'domain/cart_model.dart';
 
 class CartNotifier extends StateNotifier<List<CartModel>> {
   CartNotifier() : super([]);
@@ -7,7 +7,7 @@ class CartNotifier extends StateNotifier<List<CartModel>> {
   void addToCart(CartModel item) {
     final index = state.indexWhere((e) => e.id == item.id);
 
-    if (index != -1) {
+    if (index >= 0) {
       state[index].quantity++;
       state = [...state];
     } else {
@@ -18,7 +18,7 @@ class CartNotifier extends StateNotifier<List<CartModel>> {
   void increaseQty(String id) {
     final index = state.indexWhere((e) => e.id == id);
 
-    if (index != -1) {
+    if (index >= 0) {
       state[index].quantity++;
       state = [...state];
     }
@@ -27,25 +27,15 @@ class CartNotifier extends StateNotifier<List<CartModel>> {
   void decreaseQty(String id) {
     final index = state.indexWhere((e) => e.id == id);
 
-    if (index != -1) {
+    if (index >= 0) {
       if (state[index].quantity > 1) {
         state[index].quantity--;
-        state = [...state];
       } else {
-        removeItem(id);
+        state.removeAt(index);
       }
+
+      state = [...state];
     }
-  }
-
-  void removeItem(String id) {
-    state = state.where((e) => e.id != id).toList();
-  }
-
-  double get totalPrice {
-    return state.fold(
-      0,
-      (sum, item) => sum + (item.price * item.quantity),
-    );
   }
 
   void clearCart() {
@@ -57,11 +47,15 @@ final cartProvider =
     StateNotifierProvider<CartNotifier, List<CartModel>>(
   (ref) => CartNotifier(),
 );
-final cartTotalProvider = Provider<double>((ref) {
-  final cart = ref.watch(cartProvider);
 
-  return cart.fold(
-    0,
-    (sum, item) => sum + item.price * item.quantity,
-  );
+final cartTotalProvider = Provider<double>((ref) {
+  final cartItems = ref.watch(cartProvider);
+
+  double total = 0;
+
+  for (final item in cartItems) {
+    total += item.price * item.quantity;
+  }
+
+  return total;
 });
