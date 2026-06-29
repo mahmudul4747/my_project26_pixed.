@@ -5,24 +5,22 @@ class CartNotifier extends StateNotifier<List<CartModel>> {
   CartNotifier() : super([]);
 
   void addToCart(CartModel item) {
-    final index = state.indexWhere(
-      (e) => e.productId == item.productId,
+  final index =
+      state.indexWhere((e) => e.productId == item.productId);
+
+  if (index >= 0) {
+    final updated = state[index].copyWith(
+      quantity: state[index].quantity + item.quantity,
     );
 
-    if (index >= 0) {
-      final updated = state[index].copyWith(
-        quantity: state[index].quantity + 1,
-      );
-
-      state = [
-        for (int i = 0; i < state.length; i++)
-          if (i == index) updated else state[i],
-      ];
-    } else {
-      state = [...state, item];
-    }
+    state = [
+      for (int i = 0; i < state.length; i++)
+        if (i == index) updated else state[i],
+    ];
+  } else {
+    state = [...state, item];
   }
-
+}
   void increaseQty(String productId) {
     state = state.map((item) {
       if (item.productId == productId) {
