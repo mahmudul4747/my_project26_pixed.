@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import '../../domain/order_item_model.dart';
 import '../../data/order_service.dart';
 import '../../domain/order_model.dart';
 import '../../../cart/cart_provider.dart';
@@ -34,6 +34,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedItems = ref.watch(selectedCartItemsProvider);
     final subtotal = ref.watch(cartTotalProvider);
     const deliveryFee = 60.0;
     final total = subtotal + deliveryFee;
@@ -228,6 +229,17 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
             total: total,
             status: "Pending",
             createdAt: DateTime.now(),
+            items: selectedItems
+                .map(
+                  (item) => OrderItemModel(
+                    productId: item.productId,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    imageUrl: item.imageUrl,
+                  ),
+                )
+                .toList(),
           );
 
           await service.placeOrder(order);

@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'order_item_model.dart';
+
 class OrderModel {
   final String customerName;
   final String phone;
@@ -8,6 +11,7 @@ class OrderModel {
   final double total;
   final String status;
   final DateTime createdAt;
+  final List<OrderItemModel> items;
 
   OrderModel({
     required this.customerName,
@@ -19,6 +23,7 @@ class OrderModel {
     required this.total,
     required this.status,
     required this.createdAt,
+    required this.items,
   });
 
   Map<String, dynamic> toMap() {
@@ -31,7 +36,9 @@ class OrderModel {
       'deliveryFee': deliveryFee,
       'total': total,
       'status': status,
-      'createdAt': createdAt,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'items': items.map((e) => e.toMap()).toList(),
     };
   }
+  
 }
