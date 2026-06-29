@@ -34,63 +34,9 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
     addressController.dispose();
     super.dispose();
   }
+
   Future<void> _placeOrder() async {
-void _showSuccessDialog() {
 
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (_) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.circular(20),
-        ),
-        icon: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: const BoxDecoration(
-            color: Color(0xffE8FFF1),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.check_circle,
-            color: Colors.green,
-            size: 70,
-          ),
-        ),
-        title: const Text(
-          "Order Placed!",
-        ),
-        content: const Text(
-          "Your food is now being prepared.",
-          textAlign: TextAlign.center,
-        ),
-        actions: [ 
-
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor:
-                    primaryOrange,
-              ),
-              onPressed: () {
-
-                Navigator.pop(context);
-
-                Navigator.pop(context);
-
-              },
-              child: const Text("Continue"),
-            ),
-          ),
-
-        ],
-      );
-    },
-  );
-
-}
   if (!_formKey.currentState!.validate()) return;
 
   final selectedItems =
@@ -108,7 +54,7 @@ void _showSuccessDialog() {
     setState(() {
       isLoading = true;
     });
-
+    
     final order = OrderModel(
       customerName:
           nameController.text.trim(),
@@ -142,7 +88,7 @@ void _showSuccessDialog() {
 
     if (!mounted) return;
 
-    _showSuccessDialog();
+    await _showSuccessDialog();
 
   } finally {
 
@@ -159,10 +105,49 @@ void _showSuccessDialog() {
   }
 
 }
+Future<void> _showSuccessDialog() async {
+  await showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => AlertDialog(
+
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      icon: const Icon(
+        Icons.check_circle,
+        size: 70,
+        color: Colors.green,
+      ),
+      title: const Text("Order Placed!"),
+      content: const Text(
+        "Your order has been placed successfully.",
+      ),
+      actions: [
+        FilledButton(
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          child: const Text("Continue"),
+        ),
+      ],
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
-    final selectedItems = ref.watch(selectedCartItemsProvider);
+    final cartItems = ref.watch(cartProvider);
+final selectedItems = ref.watch(selectedCartItemsProvider);
+
+print("Cart Items = ${cartItems.length}");
+print("Selected Items = ${selectedItems.length}");
+print(selectedItems.first.name);
+
+for (final item in cartItems) {
+  print("${item.name} -> ${item.isSelected}");
+}
     final subtotal = ref.watch(cartTotalProvider);
     const deliveryFee = 60.0;
     final total = subtotal + deliveryFee;
@@ -178,7 +163,7 @@ void _showSuccessDialog() {
     iconTheme: const IconThemeData(
       color: Colors.black,
     ),
-    title: Text(
+   title: Text(
   "Checkout (${selectedItems.length})",
 
       style: TextStyle(
@@ -460,7 +445,7 @@ void _showSuccessDialog() {
               const SizedBox(height: 20),
 
             const SizedBox(height: 24),
-            const Text(
+          const Text(
   "Selected Items",
   style: TextStyle(
     fontSize: 20,
@@ -468,81 +453,76 @@ void _showSuccessDialog() {
   ),
 ),
 
-const SizedBox(height: 15),
+const SizedBox(height: 10),
 
-Container(
-  decoration: BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(20),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black.withOpacity(.05),
-        blurRadius: 10,
-        offset: const Offset(0, 5),
-      ),
-    ],
-  ),
-  child: ListView.separated(
-    shrinkWrap: true,
-    physics: const NeverScrollableScrollPhysics(),
-    itemCount: selectedItems.length,
-    separatorBuilder: (_, __) => Divider(
-      height: 1,
-      color: Colors.grey.shade200,
-    ),
-    itemBuilder: (context, index) {
-      final item = selectedItems[index];
+ListView.builder(
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  itemCount: selectedItems.length,
+  itemBuilder: (context, index) {
+    final item = selectedItems[index];
 
-      return ListTile(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 8,
-        ),
-
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: item.imageUrl.isEmpty
-              ? Container(
-                  width: 55,
-                  height: 55,
-                  color: lightOrange,
-                  child: const Icon(
-                    Icons.fastfood,
-                    color: primaryOrange,
-                  ),
-                )
-              : Image.network(
-                  item.imageUrl,
-                  width: 55,
-                  height: 55,
-                  fit: BoxFit.cover,
-                ),
-        ),
-
-        title: Text(
-          item.name,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: ListTile(
+        leading: item.imageUrl.isNotEmpty
+            ? Image.network(
+                item.imageUrl,
+                width: 55,
+                height: 55,
+                fit: BoxFit.cover,
+              )
+            : const Icon(Icons.fastfood),
+        title: Text(item.name),
         subtitle: Text(
-          "Qty : ${item.quantity}",
+          "${item.quantity} × ৳${item.price}",
         ),
-
         trailing: Text(
           "৳ ${(item.price * item.quantity).toStringAsFixed(0)}",
-          style: const TextStyle(
-            color: primaryOrange,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
         ),
-      );
-    },
-  ),
+      ),
+    );
+  },
 ),
 
+const SizedBox(height: 20),
+...selectedItems.map(
+  (item) => Card(
+    margin: const EdgeInsets.only(bottom: 10),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15),
+    ),
+    child: ListTile(
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: item.imageUrl.isNotEmpty
+            ? Image.network(
+                item.imageUrl,
+                width: 55,
+                height: 55,
+                fit: BoxFit.cover,
+              )
+            : const Icon(Icons.fastfood, size: 40),
+      ),
+      title: Text(
+        item.name,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: Text(
+        "${item.quantity} × ৳${item.price.toStringAsFixed(0)}",
+      ),
+      trailing: Text(
+        "৳ ${(item.quantity * item.price).toStringAsFixed(0)}",
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: primaryOrange,
+        ),
+      ),
+    ),
+  ),
+),
 const SizedBox(height: 25),
 
             const Text(
@@ -637,173 +617,7 @@ const SizedBox(height: 25),
 
             const SizedBox(height: 30),
 
-            Container(
-  width: double.infinity,
-  height: 62,
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(18),
-    gradient: const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Color(0xffff8a00),
-        Color(0xffff6b00),
-      ],
-    ),
-    boxShadow: [
-      BoxShadow(
-        color: primaryOrange.withOpacity(.35),
-        blurRadius: 18,
-        offset: const Offset(0, 8),
-      ),
-    ],
-  ),
-  child: ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.transparent,
-      shadowColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-      ),
-    ),
-
-    onPressed: isLoading
-        ? null
-        : () async {
-
-          if (!_formKey.currentState!.validate()) return;
-
-          try {
-
-            setState(() {
-              isLoading = true;
-            });
-
-            final order = OrderModel(
-              customerName: nameController.text.trim(),
-              phone: phoneController.text.trim(),
-              address: addressController.text.trim(),
-              paymentMethod: paymentMethod,
-              subtotal: subtotal,
-              deliveryFee: deliveryFee,
-              total: total,
-              status: "Pending",
-              createdAt: DateTime.now(),
-              items: selectedItems.map(
-                (item) {
-                  return OrderItemModel(
-                    productId: item.productId,
-                    name: item.name,
-                    price: item.price,
-                    quantity: item.quantity,
-                    imageUrl: item.imageUrl,
-                  );
-                },
-              ).toList(),
-            );
-
-            await service.placeOrder(order);
-
-            ref.read(cartProvider.notifier).removeSelected();
-
-            if (!mounted) return;
-
-            await showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                icon: const Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 70,
-                ),
-                title: const Text("Order Successful"),
-                content: const Text(
-                  "Thank you!\nYour order has been placed successfully.",
-                ),
-                actions: [
-                  FilledButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("OK"),
-                  ),
-                ],
-              ),
-            );
-
-            if (!mounted) return;
-
-            Navigator.pop(context);
-
-          } catch (e) {
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(e.toString()),
-              ),
-            );
-
-          } finally {
-
-            if (mounted) {
-              setState(() {
-                isLoading = false;
-              });
-            }
-
-          }
-
-        },
-
-    child: isLoading
-        ? const SizedBox(
-            width: 26,
-            height: 26,
-            child: CircularProgressIndicator(
-              strokeWidth: 2.5,
-              color: Colors.white,
-            ),
-          )
-        : Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
-            children: [
-
-              Row(
-                children: const [
-
-                  Icon(
-                    Icons.shopping_bag_outlined,
-                    color: Colors.white,
-                  ),
-
-                  SizedBox(width: 10),
-
-                  Text(
-                    "Place Order",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-
-                ],
-              ),
-
-              Text(
-                "৳ ${total.toStringAsFixed(0)}",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-
-            ],
-          ),
-  ),
-)
+            
           ],
         ),
       ),
