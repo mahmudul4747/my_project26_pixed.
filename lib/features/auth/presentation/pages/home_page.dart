@@ -139,14 +139,11 @@ class HomePage extends ConsumerWidget {
                                           .notifier)
                                       .addToCart(
                                         CartModel(
-                                          id: product.id,
-                                          name:
-                                              product.name,
-                                          price: product
-                                              .finalPrice,
-                                          imageUrl: product
-                                              .imageUrl,
-                                        ),
+                                            productId: product.id,
+                                            name: product.name,
+                                            imageUrl: product.imageUrl,
+                                            price: product.finalPrice,
+                                          )
                                       );
 
                                   ScaffoldMessenger.of(

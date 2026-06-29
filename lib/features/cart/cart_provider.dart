@@ -5,37 +5,80 @@ class CartNotifier extends StateNotifier<List<CartModel>> {
   CartNotifier() : super([]);
 
   void addToCart(CartModel item) {
-    final index = state.indexWhere((e) => e.id == item.id);
+    final index = state.indexWhere(
+      (e) => e.productId == item.productId,
+    );
 
     if (index >= 0) {
-      state[index].quantity++;
-      state = [...state];
+      final updated = state[index].copyWith(
+        quantity: state[index].quantity + 1,
+      );
+
+      state = [
+        for (int i = 0; i < state.length; i++)
+          if (i == index) updated else state[i],
+      ];
     } else {
       state = [...state, item];
     }
   }
 
-  void increaseQty(String id) {
-    final index = state.indexWhere((e) => e.id == id);
-
-    if (index >= 0) {
-      state[index].quantity++;
-      state = [...state];
-    }
+  void increaseQty(String productId) {
+    state = state.map((item) {
+      if (item.productId == productId) {
+        return item.copyWith(
+          quantity: item.quantity + 1,
+        );
+      }
+      return item;
+    }).toList();
   }
 
-  void decreaseQty(String id) {
-    final index = state.indexWhere((e) => e.id == id);
+  void decreaseQty(String productId) {
+    state = state
+        .map((item) {
+          if (item.productId == productId) {
+            if (item.quantity > 1) {
+              return item.copyWith(
+                quantity: item.quantity - 1,
+              );
+            }
+          }
+          return item;
+        })
+        .where((item) =>
+            !(item.productId == productId &&
+                item.quantity == 1))
+        .toList();
+  }
 
-    if (index >= 0) {
-      if (state[index].quantity > 1) {
-        state[index].quantity--;
-      } else {
-        state.removeAt(index);
+  void toggleSelection(String productId) {
+    state = state.map((item) {
+      if (item.productId == productId) {
+        return item.copyWith(
+          isSelected: !item.isSelected,
+        );
       }
+      return item;
+    }).toList();
+  }
 
-      state = [...state];
-    }
+  void selectAll() {
+    state = state
+        .map((item) => item.copyWith(isSelected: true))
+        .toList();
+  }
+
+  void unselectAll() {
+    state = state
+        .map((item) => item.copyWith(isSelected: false))
+        .toList();
+  }
+
+  void removeSelected() {
+    state = state
+        .where((item) => !item.isSelected)
+        .toList();
   }
 
   void clearCart() {
@@ -49,13 +92,29 @@ final cartProvider =
 );
 
 final cartTotalProvider = Provider<double>((ref) {
-  final cartItems = ref.watch(cartProvider);
+  final items = ref.watch(cartProvider);
 
-  double total = 0;
+  return items
+      .where((e) => e.isSelected)
+      .fold(
+        0,
+        (sum, item) =>
+            sum + item.price * item.quantity,
+      );
+});
 
-  for (final item in cartItems) {
-    total += item.price * item.quantity;
-  }
+final selectedCartItemsProvider =
+    Provider<List<CartModel>>((ref) {
+  return ref
+      .watch(cartProvider)
+      .where((e) => e.isSelected)
+      .toList();
+});
 
-  return total;
+final selectedItemCountProvider =
+    Provider<int>((ref) {
+  return ref
+      .watch(cartProvider)
+      .where((e) => e.isSelected)
+      .length;
 });
