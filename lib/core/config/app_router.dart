@@ -7,6 +7,7 @@ import 'package:my_project26_fixed/features/auth/presentation/pages/register_pag
 import 'package:my_project26_fixed/features/auth/presentation/pages/login_page.dart';
 import 'package:my_project26_fixed/features/cart/presentation/pages/cart_page.dart';
 import 'package:my_project26_fixed/features/menu/presentation/pages/menu_page.dart';
+import 'package:my_project26_fixed/features/navigation/presentation/pages/main_navigation_page.dart';
 import 'package:my_project26_fixed/features/orders/presentation/pages/checkout_page.dart';
 
 
@@ -38,9 +39,9 @@ final GoRouter appRouter = GoRouter(
     ),
 
     GoRoute(
-      path: '/home',
-      builder: (context, state) => const HomePage(),
-    ),
+  path: '/home',
+  builder: (context, state) => const MainNavigationPage(),
+),
 
     GoRoute(
       path: '/admin',

@@ -36,11 +36,11 @@ class _LoginPageState extends State<LoginPage> {
     if (!mounted) return;
 
     if (role == "admin") {
-      context.go('/admin');
-    } 
-    else if (role == "user") {
-      context.go('/home');
-    } 
+  context.go('/admin');
+} 
+else if (role == "user") {
+  context.go('/home');
+}
     else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Login failed")),
