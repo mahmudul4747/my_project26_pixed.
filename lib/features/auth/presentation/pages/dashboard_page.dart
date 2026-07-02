@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:my_project26_fixed/features/menu/presentation/widgets/special_banner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:my_project26_fixed/features/navigation/providers/navigation_provider.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/providers/product_provider.dart';
+import 'package:my_project26_fixed/features/cart/cart_provider.dart';
+import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
+import 'package:my_project26_fixed/features/menu/presentation/widgets/special_banner.dart';
+import 'package:my_project26_fixed/features/navigation/providers/navigation_provider.dart';
+
 class DashboardPage extends ConsumerStatefulWidget {
   const DashboardPage({super.key});
 
@@ -14,379 +17,289 @@ class DashboardPage extends ConsumerStatefulWidget {
 
 class _DashboardPageState
     extends ConsumerState<DashboardPage> {
-      final TextEditingController searchController =
-    TextEditingController();
+  final TextEditingController searchController =
+      TextEditingController();
 
-String search = "";
+  String search = "";
+  String selectedCategory = "All";
+
+  final List<String> categories = const [
+    "All",
+    "Burger",
+    "Pizza",
+    "Chicken",
+    "Drinks",
+    "Dessert",
+    "Coffee",
+  ];
 
   @override
-Widget build(BuildContext context, WidgetRef ref){
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
-    TextEditingController();
-final products = ref.watch(productStreamProvider);
+  String _categoryEmoji(String category) {
+    switch (category) {
+      case "Burger":
+        return "🍔";
+      case "Pizza":
+        return "🍕";
+      case "Chicken":
+        return "🍗";
+      case "Drinks":
+        return "🥤";
+      case "Dessert":
+        return "🍰";
+      case "Coffee":
+        return "☕";
+      default:
+        return "🍽";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final products = ref.watch(productStreamProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xffF7F7F7),
-      body:  SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(18),
+      backgroundColor: const Color(0xffF6F7FB),
+      body: SafeArea(
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+  child: Padding(
+    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        /// HEADER
+        Row(
           children: [
-            /// Header
-            Row(
+
+            Container(
+              width: 58,
+              height: 58,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xffFF8A00),
+                    Color(0xffFF5722),
+                  ],
+                ),
+              ),
+              child: const Icon(
+                Icons.person,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+
+            const SizedBox(width: 15),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+                children: [
+
+                  Text(
+                    _getGreeting(),
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 13,
+                    ),
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  const Text(
+                    "Hi, Food Lover 👋",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            Stack(
               children: [
-                const CircleAvatar(
-                  radius: 28,
-                  backgroundColor: Colors.deepOrange,
-                  child: Icon(
-                    Icons.person,
+
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
                     color: Colors.white,
+                    borderRadius:
+                        BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(.05),
+                        blurRadius: 14,
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.notifications_none,
                   ),
                 ),
-      
-                const SizedBox(width: 14),
-      
-                Expanded(
-                  child:Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Text(
-      _getGreeting(),
-      style: const TextStyle(
-        color: Colors.grey,
-        fontSize: 14,
-      ),
-    ),
 
-    const SizedBox(height: 4),
-
-    const Text(
-      "Hi, Food Lover 👋",
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 22,
-      ),
-    ),
-  ],
-),
-                ),
-      
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.notifications_none,
+                Positioned(
+                  right: 10,
+                  top: 10,
+                  child: Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
               ],
             ),
-      
-            const SizedBox(height: 20),
-      
-            /// Search
-            TextField(
-  controller: searchController,
-
-  onChanged: (value) {
-    setState(() {
-      search = value
-          .toLowerCase()
-          .trim();
-    });
-  },
-
-  decoration: InputDecoration(
-    hintText: "Search food...",
-    prefixIcon: const Icon(Icons.search),
-
-    suffixIcon: search.isEmpty
-        ? null
-        : IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {
-              searchController.clear();
-
-              setState(() {
-                search = "";
-              });
-            },
-          ),
-
-    filled: true,
-    fillColor: Colors.grey.shade100,
-
-    border: OutlineInputBorder(
-      borderRadius:
-          BorderRadius.circular(18),
-      borderSide: BorderSide.none,
-    ),
-  ),
-),
-      
-            const SizedBox(height: 22),
-      
-            /// Banner
-            const SpecialBanner(),
-      
-            const SizedBox(height: 24),
-      
-            /// Categories
-            const Text(
-              "Categories",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-      
-            const SizedBox(height: 15),
-      
-            SizedBox(
-  height: 95,
-  child: ListView.builder(
-    scrollDirection: Axis.horizontal,
-    itemCount: categories.length,
-    itemBuilder: (context, index) {
-      return _CategoryItem(
-        "🍽",
-        categories[index],
-      );
-    },
-  ),
-),
-      
-           const SizedBox(height: 28),
-      
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-      const Text(
-        "Popular Foods",
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 22,
-        ),
-      ),
-      
-      InkWell(
-        onTap: () {
-          ref
-              .read(navigationIndexProvider.notifier)
-              .changeIndex(1);
-        },
-        child: const Text(
-          "See All",
-          style: TextStyle(
-            color: Colors.deepOrange,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-        ],
-      ),
-      
-      const SizedBox(height: 18),
-      final categories = products.when(
-  data: (items) {
-    final list = items
-        .map((e) => e.category)
-        .toSet()
-        .toList();
-
-    return list;
-  },
-  loading: () => <String>[],
-  error: (_, __) => <String>[],
-);
-      
-      products.when(
-        data: (items) {
-      if (items.isEmpty) {
-        return const SizedBox();
-      }
-      
-      final filtered = items.where((item) {
-  return item.name
-          .toLowerCase()
-          .contains(search) ||
-      item.category
-          .toLowerCase()
-          .contains(search);
-}).toList();
-
-final popular = filtered.take(5).toList();
-if (popular.isEmpty) {
-  return const Center(
-    child: Padding(
-      padding: EdgeInsets.all(40),
-      child: Text(
-        "No food found",
-        style: TextStyle(fontSize: 18),
-      ),
-    ),
-  );
-}
-      
-      return SizedBox(
-        height: 240,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: popular.length,
-          itemBuilder: (context, index) {
-            final product = popular[index];
-      
-            return Container(
-              width: 180,
-              margin: const EdgeInsets.only(right: 16),
-      
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(.08),
-                    blurRadius: 15,
-                  ),
-                ],
-              ),
-      
-              child: Column(
-                children: [
-      
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
-                      child: product.imageUrl.trim().isEmpty
-    ? const Center(
-        child: Icon(
-          Icons.fastfood,
-          size: 60,
-        ),
-      )
-    : Image.network(
-        product.imageUrl,
-        width: double.infinity,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) {
-          return const Center(
-            child: Icon(
-              Icons.fastfood,
-              size: 60,
-            ),
-          );
-        },
-      ),
-                    ),
-                  ),
-      
-                  Padding(
-                    padding: const EdgeInsets.all(12),
-      
-                    child: Column(
-                      children: [
-      
-                        Text(
-                          product.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-      
-                        const SizedBox(height: 6),
-      
-                        Text(
-                          product.category,
-                          style: const TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
-      
-                        const SizedBox(height: 8),
-      
-                        Text(
-                          "৳ ${product.finalPrice.toStringAsFixed(0)}",
-                          style: const TextStyle(
-                            color: Colors.deepOrange,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      );
-        },
-      
-        loading: () => const Center(
-      child: CircularProgressIndicator(),
-        ),
-      
-        error: (e, _) => Center(
-      child: Text(e.toString()),
-        ),
-      ),
           ],
         ),
-      ),
-    );
-  }
-}
-String _getGreeting() {
-  final hour = DateTime.now().hour;
 
-  if (hour < 12) {
-    return "Good Morning";
-  }
+        const SizedBox(height: 28),
 
-  if (hour < 17) {
-    return "Good Afternoon";
-  }
-
-  if (hour < 21) {
-    return "Good Evening";
-  }
-
-  return "Good Night";
-}
-
-class _CategoryItem extends StatelessWidget {
-  final String emoji;
-  final String title;
-
-  const _CategoryItem(
-    this.emoji,
-    this.title,
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 85,
-      margin: const EdgeInsets.only(right: 14),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 28,
-            backgroundColor:
-                Colors.orange.shade100,
-            child: Text(
-              emoji,
-              style: const TextStyle(
-                fontSize: 24,
+        /// SEARCH
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius:
+                BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(.05),
+                blurRadius: 15,
               ),
+            ],
+          ),
+          child: TextField(
+            controller: searchController,
+
+            onChanged: (value) {
+              setState(() {
+                search = value
+                    .toLowerCase()
+                    .trim();
+              });
+            },
+
+            decoration: InputDecoration(
+              hintText:
+                  "Search burger, pizza...",
+
+              border: InputBorder.none,
+
+              prefixIcon: const Icon(
+                Icons.search,
+                color: Colors.deepOrange,
+              ),
+
+              suffixIcon: search.isEmpty
+                  ? null
+                  : IconButton(
+                      onPressed: () {
+                        searchController.clear();
+
+                        setState(() {
+                          search = "";
+                        });
+                      },
+                      icon:
+                          const Icon(Icons.close),
+                    ),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(title),
-        ],
-      ),
-    );
-  }
-}
+        ),
+
+        const SizedBox(height: 28),
+
+        /// HERO CARD
+        Container(
+          height: 180,
+          decoration: BoxDecoration(
+            borderRadius:
+                BorderRadius.circular(28),
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xffFF8A00),
+                Color(0xffFF5722),
+              ],
+            ),
+          ),
+          child: Stack(
+            children: [
+
+              Positioned(
+                right: -20,
+                top: -20,
+                child: Icon(
+                  Icons.fastfood,
+                  size: 180,
+                  color: Colors.white.withOpacity(.12),
+                ),
+              ),
+
+              Padding(
+                padding:
+                    const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  mainAxisAlignment:
+                      MainAxisAlignment.center,
+                  children: [
+
+                    Container(
+                      padding:
+                          const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white24,
+                        borderRadius:
+                            BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        "🔥 TODAY OFFER",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight:
+                              FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    const Text(
+                      "30% OFF\nAll Fast Food",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight:
+                            FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 24),
+
+        const SpecialBanner(),
+
+        const SizedBox(height: 24),
+            

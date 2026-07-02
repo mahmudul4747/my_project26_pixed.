@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_project26_fixed/features/navigation/providers/navigation_provider.dart';
-
-
+import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 
 class BottomNavBar extends ConsumerWidget {
   const BottomNavBar({super.key});
@@ -10,6 +9,7 @@ class BottomNavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = ref.watch(navigationIndexProvider);
+    final cartItems = ref.watch(cartProvider);
 
     return NavigationBar(
       selectedIndex: currentIndex,
@@ -19,31 +19,37 @@ class BottomNavBar extends ConsumerWidget {
       indicatorColor: Colors.deepOrange.shade100,
 
       onDestinationSelected: (index) {
-        ref
-            .read(navigationIndexProvider.notifier)
-            .changeIndex(index);
+        ref.read(navigationIndexProvider.notifier).changeIndex(index);
       },
 
-      destinations: const [
-        NavigationDestination(
+      destinations: [
+        const NavigationDestination(
           icon: Icon(Icons.home_outlined),
           selectedIcon: Icon(Icons.home),
           label: "Home",
         ),
 
-        NavigationDestination(
+        const NavigationDestination(
           icon: Icon(Icons.restaurant_menu_outlined),
           selectedIcon: Icon(Icons.restaurant_menu),
           label: "Menu",
         ),
 
         NavigationDestination(
-          icon: Icon(Icons.shopping_cart_outlined),
-          selectedIcon: Icon(Icons.shopping_cart),
+          icon: Badge(
+            isLabelVisible: cartItems.isNotEmpty,
+            label: Text(cartItems.length.toString()),
+            child: const Icon(Icons.shopping_cart_outlined),
+          ),
+          selectedIcon: Badge(
+            isLabelVisible: cartItems.isNotEmpty,
+            label: Text(cartItems.length.toString()),
+            child: const Icon(Icons.shopping_cart),
+          ),
           label: "Cart",
         ),
 
-        NavigationDestination(
+        const NavigationDestination(
           icon: Icon(Icons.person_outline),
           selectedIcon: Icon(Icons.person),
           label: "Profile",

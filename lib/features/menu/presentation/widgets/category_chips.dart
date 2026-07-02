@@ -6,13 +6,14 @@ class CategoryChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categories = [
-      "🍔 Burger",
-      "🍕 Pizza",
-      "🍗 Chicken",
-      "🥤 Drinks",
-      "🍟 Snacks",
-      "🍜 Noodles",
-    ];
+  "All",
+  "Burger",
+  "Pizza",
+  "Chicken",
+  "Drinks",
+  "Dessert",
+  "Coffee",
+];
 
     return SizedBox(
       height: 48,
