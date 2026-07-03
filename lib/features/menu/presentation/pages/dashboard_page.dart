@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_project26_fixed/features/admin/pressentation/providers/product_provider.dart';
 
+import 'package:my_project26_fixed/features/menu/presentation/widgets/category_section.dart';
+import 'package:my_project26_fixed/features/menu/presentation/widgets/dashboard_banner.dart';
 import 'package:my_project26_fixed/features/menu/presentation/widgets/dashboard_header.dart';
 import 'package:my_project26_fixed/features/menu/presentation/widgets/dashboard_search.dart';
-import 'package:my_project26_fixed/features/menu/presentation/widgets/dashboard_banner.dart';
-import 'package:my_project26_fixed/features/menu/presentation/widgets/category_section.dart';
 import 'package:my_project26_fixed/features/menu/presentation/widgets/popular_food_section.dart';
 import 'package:my_project26_fixed/features/menu/presentation/widgets/recommended_section.dart';
+import 'package:go_router/go_router.dart';
+import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
@@ -15,75 +18,106 @@ class DashboardPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: const Color(0xffF7F8FC),
+      floatingActionButton: Consumer(
+  builder: (context, ref, _) {
+    final cartItems = ref.watch(cartProvider);
 
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        FloatingActionButton(
+          backgroundColor: const Color(0xffFF8A00),
+          onPressed: () {
+            context.push('/cart');
+          },
+          child: const Icon(
+            Icons.shopping_cart,
+            color: Colors.white,
+          ),
+        ),
+
+        if (cartItems.isNotEmpty)
+          Positioned(
+            right: -2,
+            top: -2,
+            child: Container(
+              width: 22,
+              height: 22,
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  cartItems.length.toString(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  },
+),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
-            // TODO:
-            // ref.refresh(productProvider);
+            ref.invalidate(productStreamProvider);
           },
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
-
-            slivers: [
-              const SliverToBoxAdapter(
+            slivers: const [
+              SliverToBoxAdapter(
                 child: DashboardHeader(),
               ),
 
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: SizedBox(height: 20),
               ),
 
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: DashboardSearch(),
               ),
 
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: SizedBox(height: 20),
               ),
 
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: DashboardBanner(),
               ),
 
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: SizedBox(height: 24),
               ),
 
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: CategorySection(),
               ),
 
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: SizedBox(height: 24),
               ),
 
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: PopularFoodSection(),
               ),
 
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: SizedBox(height: 24),
               ),
 
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: RecommendedSection(),
               ),
 
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 100),
+              SliverToBoxAdapter(
+                child: SizedBox(height: 120),
               ),
-              const SizedBox(height: 20),
-
-                const DashboardSearch(),
-
-                const SizedBox(height: 20),
-                const DashboardBanner(),
-                const SizedBox(height: 24),
-
-                    CategorySection(),
-
-                const SizedBox(height: 24),
             ],
           ),
         ),
