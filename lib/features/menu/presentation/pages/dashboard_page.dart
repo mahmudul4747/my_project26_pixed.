@@ -4,7 +4,7 @@ import 'package:my_project26_fixed/features/admin/pressentation/providers/produc
 
 import 'package:my_project26_fixed/features/menu/presentation/widgets/category_section.dart';
 import 'package:my_project26_fixed/features/menu/presentation/widgets/dashboard_banner.dart';
-import 'package:my_project26_fixed/features/menu/presentation/widgets/dashboard_header.dart';
+
 import 'package:my_project26_fixed/features/menu/presentation/widgets/dashboard_search.dart';
 import 'package:my_project26_fixed/features/menu/presentation/widgets/popular_food_section.dart';
 import 'package:my_project26_fixed/features/menu/presentation/widgets/recommended_section.dart';
@@ -71,9 +71,7 @@ class DashboardPage extends ConsumerWidget {
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: const [
-              SliverToBoxAdapter(
-                child: DashboardHeader(),
-              ),
+          
 
               SliverToBoxAdapter(
                 child: SizedBox(height: 20),
@@ -102,10 +100,10 @@ class DashboardPage extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: SizedBox(height: 24),
               ),
-
-              SliverToBoxAdapter(
+              
+             /* SliverToBoxAdapter(
                 child: PopularFoodSection(),
-              ),
+              ),*/
 
               SliverToBoxAdapter(
                 child: SizedBox(height: 24),

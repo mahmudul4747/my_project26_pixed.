@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:my_project26_fixed/features/admin/data/models/product_model.dart';
-import 'package:my_project26_fixed/features/admin/data/services/product_service.dart';
-
-import '../widgets/menu_card.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_project26_fixed/features/admin/pressentation/providers/product_provider.dart';
+import 'package:my_project26_fixed/features/cart/cart_provider.dart';
+import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
+import 'package:my_project26_fixed/features/menu/presentation/pages/product_details_page.dart';
+import '../widgets/food_card.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/category_chips.dart';
 import '../widgets/specialbanner.dart';
 import '../widgets/empty_menu.dart';
 
-class MenuPage extends StatefulWidget {
+class MenuPage extends ConsumerStatefulWidget {
   const MenuPage({super.key});
 
   @override
-  State<MenuPage> createState() => _MenuPageState();
+  ConsumerState<MenuPage> createState() => _MenuPageState();
 }
 
-class _MenuPageState extends State<MenuPage> {
-  final ProductService _service = ProductService();
+class _MenuPageState extends ConsumerState<MenuPage> {
+  
 
   final TextEditingController _searchController =
       TextEditingController();
@@ -82,67 +84,92 @@ class _MenuPageState extends State<MenuPage> {
 
           const SizedBox(height: 15),
                     Expanded(
-            child: StreamBuilder<List<ProductModel>>(
-              stream: _service.getProductsStream(),
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final productAsync = ref.watch(productStreamProvider);
 
-              builder: (context, snapshot) {
+                        return productAsync.when(
+               loading: () => const Center(
+          child: CircularProgressIndicator(
+            color: Colors.deepOrange,
+          ),
+        ),
 
-                if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const Center(
-                    child:
-                        CircularProgressIndicator(
-                      color: Colors.deepOrange,
-                    ),
-                  );
-                }
+        error: (e, s) => Center(
+          child: Text(e.toString()),
+        ),
 
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      snapshot.error.toString(),
-                    ),
-                  );
-                }
+        data: (allProducts) {
+          final products = allProducts.where((item) {
+            return item.name.toLowerCase().contains(_search) ||
+                item.category.toLowerCase().contains(_search);
+          }).toList();
 
-                final allProducts =
-                    snapshot.data ?? [];
+          if (products.isEmpty) {
+            return const EmptyMenu();
+          }
 
-                final products =
-                    allProducts.where((item) {
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              final product = products[index];
 
-                  return item.name
-                          .toLowerCase()
-                          .contains(_search) ||
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: FoodCard(
+                  product: product,
+                  layout: FoodCardLayout.vertical,
 
-                      item.category
-                          .toLowerCase()
-                          .contains(_search);
+                  onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => ProductDetailsPage(
+        product: product,
+      ),
+    ),
+  );
+},
 
-                }).toList();
+                  onFavorite: () {
+                    // TODO: Wishlist
+                  },
 
-                if (products.isEmpty) {
-                  return const EmptyMenu();
-                }
+                  onAddToCart: () {
+                    ref.read(cartProvider.notifier).addToCart(
+                      CartModel(
+                        productId: product.id,
+                        name: product.name,
+                        imageUrl: product.imageUrl,
+                        price: product.finalPrice,
+                        quantity: 1,
+                        isSelected: true,
+                      ),
+                    );
 
-                return ListView.builder(
-                  padding:
-                      const EdgeInsets.all(16),
-
-                  itemCount: products.length,
-
-                  itemBuilder:
-                      (context, index) {
-
-                    return MenuCard(
-                      product: products[index],
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "${product.name} added to cart",
+                        ),
+                        duration: const Duration(seconds: 1),
+                      ),
                     );
                   },
-                );
-              },
-            ),
-          ),        ],
+                ),
+              );
+            },
+          );
+        },
+      );
+    },
+  ),
+),
+
+        ],
       ),
-    );
+    );               
+      
   }
 }

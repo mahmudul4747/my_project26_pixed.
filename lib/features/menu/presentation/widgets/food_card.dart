@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:my_project26_fixed/features/admin/data/models/product_model.dart';
 
+enum FoodCardLayout {
+  horizontal,
+  vertical,
+}
+
 class FoodCard extends StatelessWidget {
   final ProductModel product;
+  final FoodCardLayout layout;
   final VoidCallback? onTap;
   final VoidCallback? onAddToCart;
   final VoidCallback? onFavorite;
@@ -10,6 +16,7 @@ class FoodCard extends StatelessWidget {
   const FoodCard({
     super.key,
     required this.product,
+    this.layout = FoodCardLayout.horizontal,
     this.onTap,
     this.onAddToCart,
     this.onFavorite,
@@ -21,7 +28,7 @@ class FoodCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(24),
       onTap: onTap,
       child: Container(
-        width: 185,
+        width: layout == FoodCardLayout.horizontal ? 185 : null,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
@@ -34,10 +41,9 @@ class FoodCard extends StatelessWidget {
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            //================ IMAGE =================
+            ///================ IMAGE =================
 
             Expanded(
               flex: 6,
@@ -48,23 +54,26 @@ class FoodCard extends StatelessWidget {
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(24),
                     ),
-                    child: Image.network(
-                      product.imageUrl,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-
-                      errorBuilder: (_, __, ___) {
-                        return Container(
-                          color: Colors.grey.shade200,
-                          child: const Center(
-                            child: Icon(
-                              Icons.fastfood,
-                              size: 50,
-                              color: Colors.orange,
+                    child: Hero(
+                      tag: product.id,
+                      child: Image.network(
+                        product.imageUrl,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) {
+                          return Container(
+                            color: Colors.grey.shade200,
+                            child: const Center(
+                              child: Icon(
+                                Icons.fastfood,
+                                color: Colors.orange,
+                                size: 55,
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
 
@@ -75,36 +84,35 @@ class FoodCard extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
-                          vertical: 6,
+                          vertical: 5,
                         ),
                         decoration: BoxDecoration(
                           color: Colors.red,
-                          borderRadius:
-                              BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(30),
                         ),
                         child: Text(
                           "-${product.discount.toInt()}%",
                           style: const TextStyle(
                             color: Colors.white,
+                            fontSize: 11,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
                           ),
                         ),
                       ),
                     ),
 
                   Positioned(
-                    top: 10,
-                    right: 10,
+                    right: 12,
+                    top: 12,
                     child: InkWell(
                       onTap: onFavorite,
+                      borderRadius: BorderRadius.circular(20),
                       child: Container(
                         width: 36,
                         height: 36,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius:
-                              BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(
                           Icons.favorite_border,
@@ -118,15 +126,14 @@ class FoodCard extends StatelessWidget {
               ),
             ),
 
-            //================ INFO =================
+            ///================ DETAILS =================
 
             Expanded(
               flex: 5,
               child: Padding(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(12),
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
                     Text(
@@ -135,32 +142,28 @@ class FoodCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 17,
+                        fontSize: 16,
                       ),
                     ),
 
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 4),
 
-                    Text(
-                      product.category,
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
 
                     const Row(
                       children: [
+
                         Icon(
                           Icons.star,
                           color: Colors.amber,
-                          size: 18,
+                          size: 16,
                         ),
+
                         SizedBox(width: 4),
+
                         Text(
-                          "4.8",
+                          "4.5",
                           style: TextStyle(
+                            fontSize: 13,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -170,32 +173,35 @@ class FoodCard extends StatelessWidget {
                     const Spacer(),
 
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
 
                         Expanded(
                           child: Column(
                             crossAxisAlignment:
                                 CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
 
                               if (product.discount > 0)
                                 Text(
                                   "\$${product.price.toStringAsFixed(2)}",
                                   style: const TextStyle(
-                                    decoration:
-                                        TextDecoration
-                                            .lineThrough,
+                                    fontSize: 12,
                                     color: Colors.grey,
+                                    decoration:
+                                        TextDecoration.lineThrough,
                                   ),
                                 ),
 
                               Text(
                                 "\$${product.finalPrice.toStringAsFixed(2)}",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                  color: Colors.orange,
-                                  fontWeight:
-                                      FontWeight.bold,
-                                  fontSize: 20,
+                                  fontSize: 18,
+                                  color: Color(0xffFF8A00),
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
@@ -204,17 +210,14 @@ class FoodCard extends StatelessWidget {
 
                         InkWell(
                           onTap: onAddToCart,
-                          borderRadius:
-                              BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(14),
                           child: Container(
-                            width: 45,
-                            height: 45,
+                            width: 42,
+                            height: 42,
                             decoration: BoxDecoration(
-                              color:
-                                  const Color(0xffFF8A00),
+                              color: const Color(0xffFF8A00),
                               borderRadius:
-                                  BorderRadius.circular(
-                                      14),
+                                  BorderRadius.circular(14),
                             ),
                             child: const Icon(
                               Icons.add,

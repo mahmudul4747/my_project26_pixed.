@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/providers/product_provider.dart';
 import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
+import 'package:my_project26_fixed/features/menu/presentation/pages/product_details_page.dart';
 import 'package:my_project26_fixed/features/menu/presentation/widgets/food_card.dart';
 
 class RecommendedSection extends ConsumerWidget {
@@ -60,7 +61,7 @@ class RecommendedSection extends ConsumerWidget {
                   crossAxisCount: 2,
                   mainAxisSpacing: 16,
                   crossAxisSpacing: 16,
-                  childAspectRatio: .68,
+                  childAspectRatio: .58,
                 ),
                 itemBuilder: (context, index) {
                   final product = items[index];
@@ -69,8 +70,14 @@ class RecommendedSection extends ConsumerWidget {
                     product: product,
 
                     onTap: () {
-                      // TODO:
-                      // Product Details
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ProductDetailsPage(
+                            product: product,
+                          ),
+                        ),
+                      );
                     },
 
                     onFavorite: () {

@@ -63,6 +63,7 @@ class _AddProductPageState extends State<AddProductPage> {
         price: price,
         imageUrl: imageUrl,
         category: category,
+        description: '',
         discount: 0,
       );
 

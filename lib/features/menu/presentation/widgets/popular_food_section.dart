@@ -18,7 +18,7 @@ class PopularFoodSection extends ConsumerWidget {
       data: (items) {
 
         return SizedBox(
-          height: 300,
+          height: 320,
 
           child: ListView.builder(
 
