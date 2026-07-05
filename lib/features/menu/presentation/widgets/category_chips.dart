@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-
-class CategoryChips extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+class CategoryChips extends ConsumerWidget {
   const CategoryChips({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    
     final categories = [
   "All",
   "Burger",

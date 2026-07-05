@@ -11,9 +11,11 @@ class _DashboardBannerState extends State<DashboardBanner> {
   final PageController _controller = PageController();
 
   final List<String> banners = [
-    "assets/images/burger_banner.jpg",
-    "assets/images/pizza_banner.jpg",
-    "assets/images/pasta_banner.jpg",
+    "assets/assets/images/berger11.jpg",
+    "assets/assets/images/pizza11.jpg",
+    "assets/assets/images/berger12.jpg",
+    "assets/assets/images/desert11.jpg",
+
   ];
 
   int currentIndex = 0;
@@ -121,9 +123,9 @@ class _DashboardBannerState extends State<DashboardBanner> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "🔥 Special Offer",
+                  " Special Offer",
                   style: TextStyle(
-                    color: Colors.white70,
+                    color: const Color(0xffFF8A00),
                     fontSize: 14,
                   ),
                 ),
@@ -133,7 +135,7 @@ class _DashboardBannerState extends State<DashboardBanner> {
                 Text(
                   "50% OFF",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: const Color(0xffFF8A01),
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
@@ -144,7 +146,7 @@ class _DashboardBannerState extends State<DashboardBanner> {
                 Text(
                   "On Delicious Food",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: const Color(0xffFF8A01),
                     fontSize: 16,
                   ),
                 ),

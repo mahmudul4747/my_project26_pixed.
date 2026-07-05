@@ -5,7 +5,9 @@ import 'package:my_project26_fixed/features/admin/pressentation/providers/produc
 import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/menu/presentation/pages/product_details_page.dart';
+import 'package:my_project26_fixed/features/menu/presentation/providers/category_provider.dart';
 import 'package:my_project26_fixed/features/menu/presentation/widgets/food_card.dart';
+import 'package:my_project26_fixed/features/menu/presentation/providers/search_provider.dart';
 
 class RecommendedSection extends ConsumerWidget {
   const RecommendedSection({super.key});
@@ -13,7 +15,9 @@ class RecommendedSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final products = ref.watch(productStreamProvider);
-
+    final search = ref.watch(searchProvider).toLowerCase();
+    final selectedCategory = ref.watch(categoryProvider);
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -43,19 +47,38 @@ class RecommendedSection extends ConsumerWidget {
 
           products.when(
             data: (items) {
-              if (items.isEmpty) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Text("No products found"),
-                  ),
-                );
-              }
+              final filteredItems = items.where((product) {
+  final matchSearch =
+      product.name.toLowerCase().contains(search) ||
+      product.category.toLowerCase().contains(search);
 
-              return GridView.builder(
+  final matchCategory =
+      selectedCategory == "All" ||
+      product.category.toLowerCase() ==
+          selectedCategory.toLowerCase();
+
+  return matchSearch && matchCategory;
+}).toList();
+
+  if (filteredItems.isEmpty) {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Text(
+          "No products found",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+  }
+
+  return GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: items.length,
+                itemCount: filteredItems.length,
                 gridDelegate:
                     const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -64,7 +87,7 @@ class RecommendedSection extends ConsumerWidget {
                   childAspectRatio: .58,
                 ),
                 itemBuilder: (context, index) {
-                  final product = items[index];
+                  final product = filteredItems[index];
 
                   return FoodCard(
                     product: product,

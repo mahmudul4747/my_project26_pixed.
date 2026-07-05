@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_project26_fixed/features/menu/presentation/providers/search_provider.dart';
 
-class DashboardSearch extends StatelessWidget {
+class DashboardSearch extends ConsumerWidget {
   const DashboardSearch({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
           Expanded(
             child: Container(
-              height: 58,
+              height: 40,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(.05),
@@ -24,6 +26,9 @@ class DashboardSearch extends StatelessWidget {
                 ],
               ),
               child: TextField(
+                onChanged: (value) {
+                  ref.read(searchProvider.notifier).state = value;
+                },
                 decoration: InputDecoration(
                   hintText: "Search your favorite food...",
                   hintStyle: TextStyle(
@@ -48,17 +53,13 @@ class DashboardSearch extends StatelessWidget {
               ),
             ),
           ),
-
           const SizedBox(width: 12),
-
           InkWell(
-            onTap: () {
-              // TODO: Filter Page
-            },
+            onTap: () {},
             borderRadius: BorderRadius.circular(18),
             child: Container(
-              width: 58,
-              height: 58,
+              width: 50,
+              height: 40,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [

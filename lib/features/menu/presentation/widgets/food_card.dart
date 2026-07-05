@@ -185,7 +185,7 @@ class FoodCard extends StatelessWidget {
 
                               if (product.discount > 0)
                                 Text(
-                                  "\$${product.price.toStringAsFixed(2)}",
+                                  "৳ ${product.price.toStringAsFixed(2)}",
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
@@ -195,7 +195,7 @@ class FoodCard extends StatelessWidget {
                                 ),
 
                               Text(
-                                "\$${product.finalPrice.toStringAsFixed(2)}",
+                                "৳ ${product.finalPrice.toStringAsFixed(2)}",
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
