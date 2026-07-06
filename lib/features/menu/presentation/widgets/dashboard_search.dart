@@ -13,7 +13,7 @@ class DashboardSearch extends ConsumerWidget {
         children: [
           Expanded(
             child: Container(
-              height: 40,
+              height: 50,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
@@ -33,7 +33,7 @@ class DashboardSearch extends ConsumerWidget {
                   hintText: "Search your favorite food...",
                   hintStyle: TextStyle(
                     color: Colors.grey.shade500,
-                    fontSize: 15,
+                    fontSize: 14,
                   ),
                   prefixIcon: const Icon(
                     Icons.search,
@@ -59,7 +59,7 @@ class DashboardSearch extends ConsumerWidget {
             borderRadius: BorderRadius.circular(18),
             child: Container(
               width: 50,
-              height: 40,
+              height: 50,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [

@@ -1,52 +1,123 @@
 import 'package:flutter/material.dart';
 
 class CheckoutBox extends StatelessWidget {
-  final double subtotal;
-  final double deliveryFee;
-  final double discount;
-  final VoidCallback onCheckout;
+  final double totalPrice;
+  final VoidCallback? onCheckout;
 
   const CheckoutBox({
     super.key,
-    required this.subtotal,
-    required this.deliveryFee,
-    required this.discount,
-    required this.onCheckout,
+    required this.totalPrice,
+    this.onCheckout,
   });
+
+  static const _primaryRed = Color(0xFFE53935);
+  static const _primaryOrange = Color(0xFFFF9800);
 
   @override
   Widget build(BuildContext context) {
-    final total = subtotal + deliveryFee - discount;
+    const deliveryFee = 50.0;
+    const discount = 0.0;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 8,
-            color: Colors.black12,
+    final grandTotal = totalPrice + deliveryFee - discount;
+
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(30),
           ),
-        ],
-      ),
-      child: SafeArea(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.08),
+              blurRadius: 20,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _row("Subtotal", subtotal),
-            const SizedBox(height: 8),
-            _row("Delivery Fee", deliveryFee),
-            const Divider(),
-            _row("Total", total, bold: true),
-            const SizedBox(height: 15),
+
+            _priceRow(
+              "Subtotal",
+              totalPrice,
+            ),
+
+            const SizedBox(height: 10),
+
+            _priceRow(
+              "Delivery Fee",
+              deliveryFee,
+            ),
+
+            const SizedBox(height: 10),
+
+            _priceRow(
+              "Discount",
+              -discount,
+              valueColor: Colors.green,
+            ),
+
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Divider(height: 1),
+            ),
+
+            _priceRow(
+              "Grand Total",
+              grandTotal,
+              isBold: true,
+            ),
+
+            const SizedBox(height: 22),
+
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: onCheckout,
-                child: const Text("Checkout"),
+              height: 58,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(18),
+                  gradient: const LinearGradient(
+                    colors: [
+                      _primaryRed,
+                      _primaryOrange,
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                ),
+                child: ElevatedButton(
+                  onPressed: onCheckout ??
+                      () {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              "Checkout Coming Soon",
+                            ),
+                          ),
+                        );
+                      },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(18),
+                    ),
+                  ),
+                  child: Text(
+                    "Checkout  ৳${grandTotal.toStringAsFixed(0)}",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
@@ -55,20 +126,31 @@ class CheckoutBox extends StatelessWidget {
     );
   }
 
-  Widget _row(String title, double value, {bool bold = false}) {
+  Widget _priceRow(
+    String title,
+    double amount, {
+    bool isBold = false,
+    Color? valueColor,
+  }) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment:
+          MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
           style: TextStyle(
-            fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+            fontSize: isBold ? 18 : 15,
+            fontWeight: isBold
+                ? FontWeight.bold
+                : FontWeight.w500,
           ),
         ),
         Text(
-          "৳ ${value.toStringAsFixed(0)}",
+          "৳${amount.toStringAsFixed(0)}",
           style: TextStyle(
-            fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+            fontSize: isBold ? 18 : 15,
+            fontWeight: FontWeight.bold,
+            color: valueColor,
           ),
         ),
       ],

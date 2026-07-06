@@ -28,13 +28,6 @@ class BottomNavBar extends ConsumerWidget {
           selectedIcon: Icon(Icons.home),
           label: "Home",
         ),
-
-        const NavigationDestination(
-          icon: Icon(Icons.restaurant_menu_outlined),
-          selectedIcon: Icon(Icons.restaurant_menu),
-          label: "Menu",
-        ),
-
         NavigationDestination(
           icon: Badge(
             isLabelVisible: cartItems.isNotEmpty,
@@ -48,6 +41,13 @@ class BottomNavBar extends ConsumerWidget {
           ),
           label: "Cart",
         ),
+                const NavigationDestination(
+            icon: Icon(Icons.receipt_long_outlined),
+            selectedIcon: Icon(Icons.receipt_long),
+            label: "Orders",
+          ),
+
+        
 
         const NavigationDestination(
           icon: Icon(Icons.person_outline),
