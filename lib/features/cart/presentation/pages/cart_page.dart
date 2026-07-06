@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/cart/presentation/widgets/checkout_box.dart';
+import 'package:my_project26_fixed/features/orders/presentation/pages/checkout_page.dart';
 
 class CartPage extends ConsumerWidget {
   const CartPage({super.key});
@@ -24,7 +25,8 @@ class CartPage extends ConsumerWidget {
       backgroundColor: const Color(0xffF4F6FA),
 
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(90),
+        preferredSize: const Size.fromHeight(60),
+        
         child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -35,7 +37,13 @@ class CartPage extends ConsumerWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-          ),
+            borderRadius: BorderRadius.only(
+        bottomLeft: Radius.circular(30),
+        bottomRight: Radius.circular(30),
+      ),
+          )
+          , clipBehavior: Clip.antiAlias,
+
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(
@@ -54,7 +62,7 @@ class CartPage extends ConsumerWidget {
                     ),
                   ),
 
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 4),
 
                   Expanded(
                     child: Column(
@@ -68,7 +76,7 @@ class CartPage extends ConsumerWidget {
                           "My Cart",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 26,
+                            fontSize: 20,
                             fontWeight:
                                 FontWeight.bold,
                           ),
@@ -161,57 +169,28 @@ class CartPage extends ConsumerWidget {
                 CheckoutBox(
   totalPrice: subtotal,
   onCheckout: () {
-    if (cartItems.isEmpty) return;
 
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: const Icon(
-          Icons.check_circle,
-          color: Colors.green,
-          size: 70,
-        ),
-        content: const Text(
-          "Proceed to Checkout?",
-          textAlign: TextAlign.center,
-        ),
-        actions: [
+    final selected =
+        ref.read(selectedCartItemsProvider);
 
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text("Cancel"),
+    if (selected.isEmpty) {
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Please select at least one item.",
           ),
+        ),
+      );
 
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryOrange,
-            ),
-            onPressed: () {
+      return;
+    }
 
-              Navigator.pop(context);
-
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    "Checkout Coming Soon",
-                  ),
-                ),
-              );
-            },
-            child: const Text(
-              "Continue",
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const CheckoutPage(),
       ),
     );
   },
@@ -247,12 +226,12 @@ class CartPage extends ConsumerWidget {
           const Text(
             "Cart is Empty",
             style: TextStyle(
-              fontSize: 26,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
 
           const Text(
             "Add your favourite foods.",
@@ -264,7 +243,7 @@ class CartPage extends ConsumerWidget {
           const SizedBox(height: 30),
 
           SizedBox(
-            width: 220,
+            width: 200,
             height: 55,
             child: ElevatedButton(
               onPressed: () {
@@ -363,29 +342,38 @@ onDismissed: (_) {
   );
 },
     child: Card(
-      elevation: 4,
+      elevation: 2,
       shadowColor: Colors.black12,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(22),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(10),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: [Checkbox(
+          value: item.isSelected,
+          activeColor: CartPage.primaryOrange,
+          onChanged: (_) {
+            ref
+        .read(cartProvider.notifier)
+        .toggleSelection(item.productId);
+  },
+),
 
             ClipRRect(
               borderRadius: BorderRadius.circular(18),
+              
               child: Image.network(
                 item.imageUrl,
-                width: 95,
-                height: 95,
+                width: 85,
+                height: 85,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) {
                   return Container(
-                    width: 95,
-                    height: 95,
+                    width: 85,
+                    height: 85,
                     color: Colors.grey.shade200,
                     child: const Icon(Icons.fastfood),
                   );
@@ -393,7 +381,7 @@ onDismissed: (_) {
               ),
             ),
 
-            const SizedBox(width: 15),
+            const SizedBox(width: 10),
 
             Expanded(
               child: Column(
@@ -402,26 +390,32 @@ onDismissed: (_) {
                 mainAxisSize: MainAxisSize.min,
                 children: [
 
-                  Text(
-                    item.name,
-                    maxLines: 2,
-                    overflow:
-                        TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight:
-                          FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
 
                   Row(
-                    children: const [
+                    children: [
+                      Text(
+                        item.name,
+                        maxLines: 2,
+                        overflow:
+                            TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight:
+                            FontWeight.bold,
+                      ),
+                    ),
+                   
+                    ]
+                  ),
+
+                  const SizedBox(height: 0),
+
+                  Row(
+                    children: [
 
                       Icon(
                         Icons.star,
-                        size: 17,
+                        size: 14,
                         color: Colors.orange,
                       ),
 
@@ -434,27 +428,41 @@ onDismissed: (_) {
                               FontWeight.w600,
                         ),
                       ),
+                      SizedBox(width: 30),
+                  IconButton(
+                        onPressed: () {
+                          ref
+                              .read(cartProvider.notifier)
+                              .removeFromCart(
+                                item.productId,
+                              );
+                        },
+                        icon: const Icon(
+                          Icons.delete_outline,
+                          color: Colors.red,
+                        ),
+                      ),
                     ],
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 0),
+                  Row(
+                    children: [
+
 
                   Text(
                     "৳ ${item.price.toStringAsFixed(0)}",
                     style: const TextStyle(
                       color: Color(0xFFE53935),
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight:
                           FontWeight.bold,
                     ),
-                  ),
+                  ),SizedBox(width: 30),
 
-                  const SizedBox(height: 14),
+                  
 
-                  Row(
-                    children: [
-
-                      _qtyButton(
+                  _qtyButton(
                         
                         icon: Icons.remove,
                         onTap: () {
@@ -474,7 +482,7 @@ onDismissed: (_) {
                         child: Text(
                           "${item.quantity}",
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight:
                                 FontWeight.bold,
                           ),
@@ -492,21 +500,9 @@ onDismissed: (_) {
                         },
                       ),
 
-                      const Spacer(),
+                      
 
-                      IconButton(
-                        onPressed: () {
-                          ref
-                              .read(cartProvider.notifier)
-                              .removeFromCart(
-                                item.productId,
-                              );
-                        },
-                        icon: const Icon(
-                          Icons.delete_outline,
-                          color: Colors.red,
-                        ),
-                      ),
+                      
                     ],
                   ),
                 ],
@@ -534,7 +530,7 @@ Widget _qtyButton({
         height: 38,
         child: Icon(
           icon,
-          size: 20,
+          size: 16,
         ),
       ),
     ),

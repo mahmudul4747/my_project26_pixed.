@@ -46,14 +46,14 @@ class CheckoutBox extends StatelessWidget {
               totalPrice,
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 4),
 
             _priceRow(
               "Delivery Fee",
               deliveryFee,
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 4),
 
             _priceRow(
               "Discount",
@@ -72,7 +72,7 @@ class CheckoutBox extends StatelessWidget {
               isBold: true,
             ),
 
-            const SizedBox(height: 22),
+            const SizedBox(height: 8),
 
             SizedBox(
               width: double.infinity,
