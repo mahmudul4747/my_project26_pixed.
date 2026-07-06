@@ -142,7 +142,163 @@ class CartPage extends ConsumerWidget {
                       );
                     },
                   ),
+                ),Padding(
+  padding: const EdgeInsets.symmetric(
+    horizontal: 16,
+    vertical: 10,
+  ),
+  child: Container(
+    padding: const EdgeInsets.all(18),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(.05),
+          blurRadius: 12,
+          offset: const Offset(0, 5),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        const CircleAvatar(
+          radius: 22,
+          backgroundColor: Color(0xFFFFF3E0),
+          child: Icon(
+            Icons.delivery_dining,
+            color: Colors.deepOrange,
+          ),
+        ),
+        const SizedBox(width: 14),
+        const Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Estimated Delivery",
+                style: TextStyle(
+                  color: Colors.grey,
                 ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                "25 - 30 Minutes",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 8,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.green.shade50,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: const Text(
+            "Free",
+            style: TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 16),
+  child: InkWell(
+    borderRadius: BorderRadius.circular(20),
+    onTap: () {},
+    child: Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.05),
+            blurRadius: 10,
+          ),
+        ],
+      ),
+      child: const Row(
+        children: [
+          Icon(
+            Icons.local_offer,
+            color: Colors.orange,
+          ),
+          SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              "Apply Coupon",
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Icon(Icons.arrow_forward_ios, size: 18),
+        ],
+      ),
+    ),
+  ),
+),Padding(
+  padding: const EdgeInsets.all(16),
+  child: Container(
+    padding: const EdgeInsets.all(18),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: const Row(
+      children: [
+        Icon(
+          Icons.location_on,
+          color: Colors.red,
+        ),
+        SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            "Home\n123 Restaurant Street",
+          ),
+        ),
+        Icon(Icons.edit_location_alt),
+      ],
+    ),
+  ),
+),Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 16),
+  child: Container(
+    padding: const EdgeInsets.all(18),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: const Row(
+      children: [
+        Icon(
+          Icons.payment,
+          color: Colors.deepOrange,
+        ),
+        SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            "Cash on Delivery",
+          ),
+        ),
+        Icon(Icons.keyboard_arrow_right),
+      ],
+    ),
+  ),
+),
 
                 CheckoutBox(
                   totalPrice: totalPrice,
@@ -484,9 +640,10 @@ Widget _qtyButton({
         width: 36,
         height: 36,
         child: Icon(
-          icon,
-          size: 20,
-        ),
+            icon,
+            size: 20,
+            color: const Color(0xFFE53935),
+          ),
       ),
     ),
   ),
