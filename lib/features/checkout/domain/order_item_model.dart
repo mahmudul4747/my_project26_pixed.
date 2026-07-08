@@ -4,6 +4,7 @@ class OrderItemModel {
   final double price;
   final int quantity;
   final String imageUrl;
+  
 
   const OrderItemModel({
     required this.productId,

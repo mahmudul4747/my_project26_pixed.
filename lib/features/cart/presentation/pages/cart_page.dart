@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/cart/presentation/widgets/checkout_box.dart';
-import 'package:my_project26_fixed/features/orders/presentation/pages/checkout_page.dart';
+import 'package:my_project26_fixed/features/checkout/presentation/pages/checkout_page.dart';
 
 class CartPage extends ConsumerWidget {
   const CartPage({super.key});
@@ -14,6 +15,7 @@ class CartPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final selectedItems = ref.read(selectedCartItemsProvider);
     final cartItems = ref.watch(cartProvider);
 
     final subtotal = cartItems.fold<double>(
@@ -187,12 +189,10 @@ class CartPage extends ConsumerWidget {
       return;
     }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const CheckoutPage(),
-      ),
-    );
+   context.push(
+  '/checkout',
+  extra: selectedItems,
+);
   },
 ),
               ],

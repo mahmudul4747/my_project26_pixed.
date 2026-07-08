@@ -5,10 +5,11 @@ import 'package:my_project26_fixed/features/admin/pressentation/pages/admin_dash
 import 'package:my_project26_fixed/features/auth/presentation/pages/home_page.dart';
 import 'package:my_project26_fixed/features/auth/presentation/pages/register_page.dart';
 import 'package:my_project26_fixed/features/auth/presentation/pages/login_page.dart';
+import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/cart/presentation/pages/cart_page.dart';
 import 'package:my_project26_fixed/features/menu/presentation/pages/menu_page.dart';
 import 'package:my_project26_fixed/features/navigation/presentation/pages/main_navigation_page.dart';
-import 'package:my_project26_fixed/features/orders/presentation/pages/checkout_page.dart';
+import 'package:my_project26_fixed/features/checkout/presentation/pages/checkout_page.dart';
 
 
 final GoRouter appRouter = GoRouter(
@@ -58,9 +59,14 @@ final GoRouter appRouter = GoRouter(
       path: '/cart',
       builder: (context, state) => const CartPage(),
     ),GoRoute(
-          path: '/checkout',
-          builder: (context, state) =>
-              const CheckoutPage(),
-        ),
+  path: '/checkout',
+  builder: (context, state) {
+    final items = state.extra as List<CartModel>;
+
+    return CheckoutPage(
+      items: items,
+    );
+  },
+),
   ],
 );
