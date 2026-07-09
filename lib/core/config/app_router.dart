@@ -2,13 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/pages/add_product_page.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/pages/admin_dashboard_page.dart';
-import 'package:my_project26_fixed/features/auth/presentation/pages/home_page.dart';
 import 'package:my_project26_fixed/features/auth/presentation/pages/register_page.dart';
 import 'package:my_project26_fixed/features/auth/presentation/pages/login_page.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/cart/presentation/pages/cart_page.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/pages/order_success_page.dart';
-import 'package:my_project26_fixed/features/dasboard/presentation/pages/menu_page.dart';
+
 import 'package:my_project26_fixed/features/navigation/presentation/pages/main_navigation_page.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/pages/checkout_page.dart';
 
@@ -50,19 +49,16 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const AdminDashboardPage(),
     ),
     GoRoute(
-      path: '/menu',
-      builder: (context, state) => const MenuPage(),
-    ),GoRoute(
       path: '/add-product',
       builder: (context, state) => const AddProductPage(),
     ),
     GoRoute(
       path: '/cart',
       builder: (context, state) => const CartPage(),
-    ),GoRoute(
-  path: '/checkout',
-  builder: (context, state) {
-    final items = state.extra as List<CartModel>;
+        ),GoRoute(
+      path: '/checkout',
+      builder: (context, state) {
+        final items = state.extra as List<CartModel>;
 
     return CheckoutPage(
       items: items,
