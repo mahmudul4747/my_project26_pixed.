@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_project26_fixed/features/cart/cart_provider.dart';
-
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
+import 'package:my_project26_fixed/features/checkout/domain/order_item_model.dart';
+import 'package:my_project26_fixed/features/checkout/domain/order_model.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/pages/order_success_page.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/widgets/address_card.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/widgets/order_summary.dart';
@@ -63,63 +64,63 @@ Future<void> _placeOrder() async {
     return;
   }
 
-  // Total Calculate
-  final subtotal = widget.items.fold<double>(
-    0,
-    (sum, item) => sum + (item.price * item.quantity),
-  );
-
-  const deliveryFee = 50.0;
-  const discount = 0.0;
-
-  // Order Data
-  final order = {
-    "customerName": nameController.text,
-    "phone": phoneController.text,
-    "address": addressController.text,
-    "note": noteController.text,
-    "paymentMethod": paymentMethod,
-    "items": widget.items.map((e) {
-      return {
-        "name": e.name,
-        "price": e.price,
-        "quantity": e.quantity,
-      };
-    }).toList(),
-    "subtotal": subtotal,
-    "deliveryFee": deliveryFee,
-    "discount": discount,
-    "total": subtotal + deliveryFee - discount,
-    "status": "Pending",
-    "createdAt": FieldValue.serverTimestamp(),
-  };
-
   setState(() {
     isPlacingOrder = true;
   });
 
   try {
-    // Step 7: Firestore Save
+    final subtotal = widget.items.fold<double>(
+      0,
+      (sum, item) => sum + (item.price * item.quantity),
+    );
+
+    const deliveryFee = 50.0;
+    const discount = 0.0;
+
+    final order = OrderModel(
+      customerName: nameController.text,
+      phone: phoneController.text,
+      address: addressController.text,
+      note: noteController.text,
+      paymentMethod: paymentMethod,
+      subtotal: subtotal,
+      deliveryFee: deliveryFee,
+      discount: discount,
+      total: subtotal + deliveryFee - discount,
+      status: "Pending",
+      createdAt: DateTime.now(),
+      items: widget.items.map((item) {
+        return OrderItemModel(
+          productId: item.productId,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          imageUrl: item.imageUrl,
+        );
+      }).toList(),
+    );
+
+    // Firestore Save
+    await FirebaseFirestore.instance
+        .collection('orders')
+        .add(order.toMap());
+
+    // Clear Cart
     ref.read(cartProvider.notifier).clearCart();
 
     if (!mounted) return;
 
-Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(
-    builder: (_) => const OrderSuccessPage(),
-  ),
-);
-    // FirebaseFirestore.instance.collection('orders').add(order);
-
-    await FirebaseFirestore.instance
-    .collection('orders')
-    .add(order);
-
     // Success Page
+    context.go('/order-success');
   } catch (e) {
+    if (!mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(e.toString())),
+      SnackBar(
+        content: Text(
+          "Order failed: $e",
+        ),
+      ),
     );
   } finally {
     if (mounted) {
@@ -137,6 +138,12 @@ Navigator.pushReplacement(
 );
 
 const deliveryFee = 50.0;
+
+
+
+
+
+
 const discount = 0.0;
 
     return Scaffold(
@@ -245,9 +252,9 @@ const discount = 0.0;
               /// Step 2
               /// Address Card
               AddressCard(
-                    title: "Home",
+                    title: "",
                     address:
-                        "House 12, Road 5, Mirpur, Dhaka",
+                        "",
                     onChange: () {
                       // পরে Address Page-এ Navigate করবে
                     },

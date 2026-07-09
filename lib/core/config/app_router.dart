@@ -7,6 +7,7 @@ import 'package:my_project26_fixed/features/auth/presentation/pages/register_pag
 import 'package:my_project26_fixed/features/auth/presentation/pages/login_page.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/cart/presentation/pages/cart_page.dart';
+import 'package:my_project26_fixed/features/checkout/presentation/pages/order_success_page.dart';
 import 'package:my_project26_fixed/features/menu/presentation/pages/menu_page.dart';
 import 'package:my_project26_fixed/features/navigation/presentation/pages/main_navigation_page.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/pages/checkout_page.dart';
@@ -67,6 +68,10 @@ final GoRouter appRouter = GoRouter(
       items: items,
     );
   },
+),
+GoRoute(
+  path: '/order-success',
+  builder: (context, state) => const OrderSuccessPage(),
 ),
   ],
 );
