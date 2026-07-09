@@ -428,7 +428,7 @@ onDismissed: (_) {
                               FontWeight.w600,
                         ),
                       ),
-                      SizedBox(width: 30),
+                      SizedBox(width: 50),
                   IconButton(
                         onPressed: () {
                           ref
@@ -458,9 +458,8 @@ onDismissed: (_) {
                       fontWeight:
                           FontWeight.bold,
                     ),
-                  ),SizedBox(width: 30),
-
-                  
+                  ),
+                  SizedBox(width: 20),
 
                   _qtyButton(
                         
@@ -482,7 +481,7 @@ onDismissed: (_) {
                         child: Text(
                           "${item.quantity}",
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 10,
                             fontWeight:
                                 FontWeight.bold,
                           ),

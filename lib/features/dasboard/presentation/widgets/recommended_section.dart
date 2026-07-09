@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/providers/product_provider.dart';
 import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
-import 'package:my_project26_fixed/features/menu/presentation/pages/product_details_page.dart';
-import 'package:my_project26_fixed/features/menu/presentation/providers/category_provider.dart';
-import 'package:my_project26_fixed/features/menu/presentation/widgets/food_card.dart';
-import 'package:my_project26_fixed/features/menu/presentation/providers/search_provider.dart';
+import 'package:my_project26_fixed/features/dasboard/presentation/pages/product_details_page.dart';
+import 'package:my_project26_fixed/features/dasboard/presentation/providers/category_provider.dart';
+import 'package:my_project26_fixed/features/dasboard/presentation/widgets/food_card.dart';
+import 'package:my_project26_fixed/features/dasboard/presentation/providers/search_provider.dart';
 
 class RecommendedSection extends ConsumerWidget {
   const RecommendedSection({super.key});

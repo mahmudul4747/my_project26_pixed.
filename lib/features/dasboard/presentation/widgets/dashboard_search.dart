@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_project26_fixed/features/menu/presentation/providers/search_provider.dart';
+import 'package:my_project26_fixed/features/dasboard/presentation/providers/search_provider.dart';
 
 class DashboardSearch extends ConsumerWidget {
   const DashboardSearch({super.key});

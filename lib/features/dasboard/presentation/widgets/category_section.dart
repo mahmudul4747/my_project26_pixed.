@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_project26_fixed/features/menu/presentation/providers/category_provider.dart';
+import 'package:my_project26_fixed/features/dasboard/presentation/providers/category_provider.dart';
 
 class CategorySection extends ConsumerStatefulWidget {
   const CategorySection({super.key});

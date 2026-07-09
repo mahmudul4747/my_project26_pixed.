@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/providers/product_provider.dart';
-
-import 'package:my_project26_fixed/features/menu/presentation/widgets/category_section.dart';
-import 'package:my_project26_fixed/features/menu/presentation/widgets/dashboard_banner.dart';
-
-import 'package:my_project26_fixed/features/menu/presentation/widgets/dashboard_search.dart';
-import 'package:my_project26_fixed/features/menu/presentation/widgets/popular_food_section.dart';
-import 'package:my_project26_fixed/features/menu/presentation/widgets/recommended_section.dart';
+import 'package:my_project26_fixed/features/dasboard/presentation/widgets/category_section.dart';
+import 'package:my_project26_fixed/features/dasboard/presentation/widgets/dashboard_banner.dart';
+import 'package:my_project26_fixed/features/dasboard/presentation/widgets/dashboard_search.dart';
+import 'package:my_project26_fixed/features/dasboard/presentation/widgets/recommended_section.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 
@@ -100,7 +97,7 @@ class DashboardPage extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: SizedBox(height: 24),
               ),
-              
+
              /* SliverToBoxAdapter(
                 child: PopularFoodSection(),
               ),*/

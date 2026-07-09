@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/providers/product_provider.dart';
 import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
-import 'package:my_project26_fixed/features/menu/presentation/widgets/food_card.dart';
+import 'package:my_project26_fixed/features/dasboard/presentation/widgets/food_card.dart';
 
 class PopularFoodSection extends ConsumerWidget {
   const PopularFoodSection({super.key});

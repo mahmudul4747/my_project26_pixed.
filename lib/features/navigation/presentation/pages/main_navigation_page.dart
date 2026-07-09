@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_project26_fixed/features/menu/presentation/pages/dashboard_page.dart';
-
+import 'package:my_project26_fixed/features/dasboard/presentation/pages/dashboard_page.dart';
 import 'package:my_project26_fixed/features/navigation/providers/navigation_provider.dart';
-
-
-import 'package:my_project26_fixed/features/menu/presentation/pages/menu_page.dart';
 import 'package:my_project26_fixed/features/cart/presentation/pages/cart_page.dart';
 import 'package:my_project26_fixed/features/navigation/widgets/bottom_nav_bar.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/pages/order_page.dart';
