@@ -1,8 +1,8 @@
 class AppStrings {
-  static const appName = 'Restaurant Manager';
+  static const appName = 'Fooddoo';
 
   static const dashboard = 'Dashboard';
-  static const menu = 'Menu';
+  static const menu = 'Card';
   static const orders = 'Orders';
   static const settings = 'Settings';
 }

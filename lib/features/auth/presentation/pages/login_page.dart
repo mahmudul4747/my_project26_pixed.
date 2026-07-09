@@ -100,7 +100,7 @@ else if (role == "user") {
                     ),
                     const SizedBox(height: 20),
                     const Text(
-                      "Restaurant Manager",
+                      "Fooddoo",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 26,
@@ -109,7 +109,7 @@ else if (role == "user") {
                     ),
                     const SizedBox(height: 6),
                     const Text(
-                      "Manage your restaurant smartly",
+                      "All time delicious food at furches",
                       style: TextStyle(
                         color: Colors.white70,
                       ),

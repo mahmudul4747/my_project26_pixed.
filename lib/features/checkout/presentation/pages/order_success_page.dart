@@ -17,12 +17,6 @@ class OrderSuccessPage extends StatelessWidget {
                 MainAxisAlignment.center,
             children: [
 
-              const Icon(
-                Icons.check_circle,
-                size: 120,
-                color: Colors.green,
-              ),
-
               const SizedBox(height: 30),
 
               const Text(
@@ -47,7 +41,28 @@ class OrderSuccessPage extends StatelessWidget {
 
               const SizedBox(height: 40),
 
-              SizedBox(
+Container(
+  height: 130,
+  width: 130,
+  decoration: const BoxDecoration(
+    shape: BoxShape.circle,
+    gradient: LinearGradient(
+      colors: [
+        Color(0xFFE53935),
+        Color(0xFFFF9800),
+      ],
+    ),
+  ),
+  child:const Icon(
+  Icons.check_circle,
+  size: 120,
+  color: Colors.green,
+),
+),
+
+const SizedBox(height: 50),
+
+SizedBox(
   width: double.infinity,
   height: 58,
   child: DecoratedBox(
@@ -57,8 +72,6 @@ class OrderSuccessPage extends StatelessWidget {
           Color(0xFFE53935),
           Color(0xFFFF9800),
         ],
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
       ),
       borderRadius: BorderRadius.circular(18),
     ),
@@ -77,13 +90,14 @@ class OrderSuccessPage extends StatelessWidget {
         "Back to Home",
         style: TextStyle(
           color: Colors.white,
-          fontSize: 17,
+          fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
       ),
     ),
   ),
 ),
+
             ],
           ),
         ),
