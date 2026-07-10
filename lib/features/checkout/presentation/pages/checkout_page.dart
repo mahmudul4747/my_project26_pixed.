@@ -11,6 +11,7 @@ import 'package:my_project26_fixed/features/checkout/presentation/widgets/addres
 import 'package:my_project26_fixed/features/checkout/presentation/widgets/order_summary.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/widgets/payment_card.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/widgets/price_details.dart';
+import 'package:my_project26_fixed/features/navigation/providers/navigation_provider.dart';
 
 class CheckoutPage extends ConsumerStatefulWidget {
   
@@ -105,24 +106,38 @@ Future<void> _placeOrder() async {
         .collection('orders')
         .add(order.toMap());
 
-    // Clear Cart
-    ref.read(cartProvider.notifier).clearCart();
+    // শুধু Selected Item Remove
+    ref.read(cartProvider.notifier).removeSelectedItems();
+
+    // বাকি Item Unselect
+    ref.read(cartProvider.notifier).unselectAll();
+
+    // Home Tab Select
+    ref.read(navigationIndexProvider.notifier).changeIndex(0);
 
     if (!mounted) return;
 
-    // Success Page
-    context.go('/order-success');
-  } catch (e) {
-    if (!mounted) return;
+    // Home Page
+    context.go('/home');
+    // Success Message
+ScaffoldMessenger.of(context).showSnackBar(
+  const SnackBar(
+    content: Text("🎉 Order placed successfully!"),
+    backgroundColor: Colors.green,
+    duration: Duration(seconds: 2),
+  ),);
+  } catch (e, stackTrace) {
+  debugPrint('Order placement failed: $e');
+  debugPrint('$stackTrace');
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          "Order failed: $e",
-        ),
-      ),
-    );
-  } finally {
+  if (!mounted) return;
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text("Failed to place order. Please try again."),
+    ),
+  );
+} finally {
     if (mounted) {
       setState(() {
         isPlacingOrder = false;
@@ -138,11 +153,6 @@ Future<void> _placeOrder() async {
 );
 
 const deliveryFee = 50.0;
-
-
-
-
-
 
 const discount = 0.0;
 
@@ -178,7 +188,7 @@ const discount = 0.0;
 
                     IconButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                       context.pop();
                       },
                       icon: const Icon(
                         Icons.arrow_back_ios_new,
@@ -251,14 +261,7 @@ const discount = 0.0;
 
               /// Step 2
               /// Address Card
-              AddressCard(
-                    title: "",
-                    address:
-                        "",
-                    onChange: () {
-                      // পরে Address Page-এ Navigate করবে
-                    },
-                  ),    
+                 
                   Form(
   key: formKey,
   child: Column(

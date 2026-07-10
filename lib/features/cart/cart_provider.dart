@@ -82,6 +82,8 @@ class CartNotifier extends StateNotifier<List<CartModel>> {
   state = state.where((item) {
     return item.productId != productId;
   }).toList();
+}void removeSelectedItems() {
+  state = state.where((item) => !item.isSelected).toList();
 }
 
   void clearCart() {

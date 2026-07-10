@@ -6,6 +6,7 @@ import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/cart/presentation/widgets/checkout_box.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/pages/checkout_page.dart';
+import 'package:my_project26_fixed/features/navigation/providers/navigation_provider.dart';
 
 class CartPage extends ConsumerWidget {
   const CartPage({super.key});
@@ -134,7 +135,7 @@ class CartPage extends ConsumerWidget {
       ),
 
       body: cartItems.isEmpty
-          ? _emptyWidget(context)
+          ? _emptyWidget(context, ref)
           : Column(
               children: [
 
@@ -169,38 +170,38 @@ class CartPage extends ConsumerWidget {
                 ),
 
                 CheckoutBox(
-  totalPrice: subtotal,
-  onCheckout: () {
+                  totalPrice: subtotal,
+                  onCheckout: () {
 
-    final selected =
-        ref.read(selectedCartItemsProvider);
+                    final selected =
+                        ref.read(selectedCartItemsProvider);
 
-    if (selected.isEmpty) {
+                    if (selected.isEmpty) {
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Please select at least one item.",
-          ),
-        ),
-      );
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            "Please select at least one item.",
+                          ),
+                        ),
+                      );
 
-      return;
-    }
+                      return;
+                    }
 
-   context.push(
-  '/checkout',
-  extra: selectedItems,
-);
-  },
-),
+                    context.push(
+                      '/checkout',
+                      extra: selectedItems,
+                    );
+                  },
+                ),
               ],
             ),
     );
   }
 
-  Widget _emptyWidget(BuildContext context) {
+  Widget _emptyWidget(BuildContext context, WidgetRef ref) {
     return Center(
       child: Column(
         mainAxisAlignment:
@@ -247,7 +248,8 @@ class CartPage extends ConsumerWidget {
             height: 55,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                ref.read(navigationIndexProvider.notifier).changeIndex(0);
+                context.go('/home');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryOrange,
@@ -271,8 +273,7 @@ class CartPage extends ConsumerWidget {
     );
   }
 
-  
-  }Widget _buildCartItem(
+  Widget _buildCartItem(
   BuildContext context,
   WidgetRef ref,
   CartModel item,
@@ -534,4 +535,5 @@ Widget _qtyButton({
       ),
     ),
   );
+}
 }
