@@ -13,16 +13,13 @@ class StatusChip extends StatelessWidget {
       case "pending":
         return Colors.orange;
 
-      case "accepted":
+      case "preparing":
         return Colors.blue;
 
-      case "preparing":
+      case "ready":
         return Colors.deepPurple;
 
-      case "on the way":
-        return Colors.teal;
-
-      case "delivered":
+      case "completed":
         return Colors.green;
 
       case "cancelled":
@@ -38,17 +35,14 @@ class StatusChip extends StatelessWidget {
       case "pending":
         return Icons.schedule;
 
-      case "accepted":
-        return Icons.check_circle;
-
       case "preparing":
         return Icons.restaurant;
 
-      case "on the way":
-        return Icons.delivery_dining;
+      case "ready":
+        return Icons.inventory_2;
 
-      case "delivered":
-        return Icons.done_all;
+      case "completed":
+        return Icons.check_circle;
 
       case "cancelled":
         return Icons.cancel;
@@ -68,6 +62,9 @@ class StatusChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withOpacity(.12),
         borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: color.withOpacity(.25),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
