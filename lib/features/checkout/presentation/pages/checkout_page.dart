@@ -12,6 +12,7 @@ import 'package:my_project26_fixed/features/checkout/presentation/widgets/order_
 import 'package:my_project26_fixed/features/checkout/presentation/widgets/payment_card.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/widgets/price_details.dart';
 import 'package:my_project26_fixed/features/navigation/providers/navigation_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CheckoutPage extends ConsumerStatefulWidget {
   
@@ -79,6 +80,8 @@ Future<void> _placeOrder() async {
     const discount = 0.0;
 
     final order = OrderModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      userId: FirebaseAuth.instance.currentUser?.uid ?? '',
       customerName: nameController.text,
       phone: phoneController.text,
       address: addressController.text,

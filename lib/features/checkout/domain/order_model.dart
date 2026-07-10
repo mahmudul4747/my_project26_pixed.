@@ -7,6 +7,8 @@ class OrderModel {
   final String phone;
   final String address;
   final String note;
+  final String id;
+  final String userId;
 
   final String paymentMethod;
 
@@ -26,6 +28,8 @@ class OrderModel {
     required this.phone,
     required this.address,
     required this.note,
+    required this.id,
+    required this.userId,
     required this.paymentMethod,
     required this.subtotal,
     required this.deliveryFee,
@@ -37,49 +41,47 @@ class OrderModel {
   });
 
   Map<String, dynamic> toMap() {
-    return {
-      'customerName': customerName,
-      'phone': phone,
-      'address': address,
-      'note': note,
-      'paymentMethod': paymentMethod,
-      'subtotal': subtotal,
-      'deliveryFee': deliveryFee,
-      'discount': discount,
-      'total': total,
-      'status': status,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'items': items.map((e) => e.toMap()).toList(),
-    };
-  }
-
-  factory OrderModel.fromMap(
-    Map<String, dynamic> map,
-  ) {
-    return OrderModel(
-      customerName: map['customerName'] ?? '',
-      phone: map['phone'] ?? '',
-      address: map['address'] ?? '',
-      note: map['note'] ?? '',
-      paymentMethod: map['paymentMethod'] ?? '',
-      subtotal: (map['subtotal'] ?? 0).toDouble(),
-      deliveryFee: (map['deliveryFee'] ?? 0).toDouble(),
-      discount: (map['discount'] ?? 0).toDouble(),
-      total: (map['total'] ?? 0).toDouble(),
-      status: map['status'] ?? 'Pending',
-      createdAt:
-          (map['createdAt'] as Timestamp).toDate(),
-      items: (map['items'] as List)
-          .map(
-            (e) => OrderItemModel(
-              productId: e['productId'],
-              name: e['name'],
-              price: (e['price']).toDouble(),
-              quantity: e['quantity'],
-              imageUrl: e['imageUrl'],
-            ),
-          )
-          .toList(),
-    );
-  }
+  return {
+    'userId': userId,
+    'customerName': customerName,
+    'phone': phone,
+    'address': address,
+    'note': note,
+    'paymentMethod': paymentMethod,
+    'subtotal': subtotal,
+    'deliveryFee': deliveryFee,
+    'discount': discount,
+    'total': total,
+    'status': status,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'items': items.map((e) => (e as dynamic).toMap()).toList(),
+  };
 }
+
+  factory OrderModel.fromFirestore(DocumentSnapshot doc) {
+  final map = doc.data() as Map<String, dynamic>;
+
+  return OrderModel(
+    id: doc.id,
+    userId: map['userId'] ?? '',
+    customerName: map['customerName'] ?? '',
+    phone: map['phone'] ?? '',
+    address: map['address'] ?? '',
+    note: map['note'] ?? '',
+    paymentMethod: map['paymentMethod'] ?? '',
+    subtotal: (map['subtotal'] ?? 0).toDouble(),
+    deliveryFee: (map['deliveryFee'] ?? 0).toDouble(),
+    discount: (map['discount'] ?? 0).toDouble(),
+    total: (map['total'] ?? 0).toDouble(),
+    status: map['status'] ?? 'Pending',
+    createdAt: (map['createdAt'] as Timestamp).toDate(),
+    items: (map['items'] as List)
+        .map(
+          (e) => OrderItemModel.fromMap(
+            e as Map<String, dynamic>,
+          ),
+        )
+        .toList(),
+  );
+}
+  }
