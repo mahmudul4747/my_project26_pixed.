@@ -6,10 +6,12 @@ import 'package:my_project26_fixed/features/auth/presentation/pages/register_pag
 import 'package:my_project26_fixed/features/auth/presentation/pages/login_page.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/cart/presentation/pages/cart_page.dart';
+import 'package:my_project26_fixed/features/checkout/domain/order_model.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/pages/order_success_page.dart';
-
 import 'package:my_project26_fixed/features/navigation/presentation/pages/main_navigation_page.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/pages/checkout_page.dart';
+import 'package:my_project26_fixed/features/orders/pressentation/pages/my_orders_page.dart';
+import 'package:my_project26_fixed/features/orders/pressentation/pages/order_details_page.dart';
 
 
 final GoRouter appRouter = GoRouter(
@@ -68,6 +70,25 @@ final GoRouter appRouter = GoRouter(
 GoRoute(
   path: '/order-success',
   builder: (context, state) => const OrderSuccessPage(),
+),
+GoRoute(
+  path: '/my-orders',
+  name: 'my-orders',
+  builder: (context, state) => const MyOrdersPage(),
+),
+
+GoRoute(
+  path: '/order-details',
+  name: 'order-details',
+  builder: (context, state) {
+    final order = state.extra as OrderModel;
+    return OrderDetailsPage(order: order);
+  },
+),
+GoRoute(
+  path: '/admin-orders',
+  name: 'admin-orders',
+  builder: (context, state) => const AdminOrdersPage(),
 ),
   ],
 );

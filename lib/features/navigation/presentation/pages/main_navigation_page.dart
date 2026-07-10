@@ -4,7 +4,7 @@ import 'package:my_project26_fixed/features/dasboard/presentation/pages/dashboar
 import 'package:my_project26_fixed/features/navigation/providers/navigation_provider.dart';
 import 'package:my_project26_fixed/features/cart/presentation/pages/cart_page.dart';
 import 'package:my_project26_fixed/features/navigation/widgets/bottom_nav_bar.dart';
-import 'package:my_project26_fixed/features/checkout/presentation/pages/order_page.dart';
+import 'package:my_project26_fixed/features/orders/pressentation/pages/my_orders_page.dart';
 import 'package:my_project26_fixed/features/wishlist/presentation/pages/settings_page.dart';
 
 class MainNavigationPage extends ConsumerWidget {
@@ -17,7 +17,7 @@ class MainNavigationPage extends ConsumerWidget {
     final pages = [
       const DashboardPage(),
       const CartPage(),
-      const OrderPage(),
+      const MyOrdersPage(),
       const SettingsPage(),
     ];
 

@@ -6,8 +6,6 @@ import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/checkout/domain/order_item_model.dart';
 import 'package:my_project26_fixed/features/checkout/domain/order_model.dart';
-import 'package:my_project26_fixed/features/checkout/presentation/pages/order_success_page.dart';
-import 'package:my_project26_fixed/features/checkout/presentation/widgets/address_card.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/widgets/order_summary.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/widgets/payment_card.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/widgets/price_details.dart';
