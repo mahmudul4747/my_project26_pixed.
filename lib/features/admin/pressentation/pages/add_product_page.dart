@@ -10,46 +10,47 @@ class AddProductPage extends StatefulWidget {
 }
 
 class _AddProductPageState extends State<AddProductPage> {
-  final ProductService service = ProductService();
+  final ProductService _service = ProductService();
+
+  final _formKey = GlobalKey<FormState>();
 
   final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
   final priceController = TextEditingController();
-  final categoryController = TextEditingController();
+  final discountController = TextEditingController();
+  final stockController = TextEditingController();
   final imageController = TextEditingController();
 
+  bool isAvailable = true;
   bool isLoading = false;
 
+  String selectedCategory = "Burger";
+
+  final List<String> categories = const [
+    "Burger",
+    "Pizza",
+    "Chicken",
+    "Drinks",
+    "Dessert",
+    "Coffee",
+    "Rice",
+    "Fast Food",
+  ];
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    priceController.dispose();
+    discountController.dispose();
+    stockController.dispose();
+    imageController.dispose();
+    super.dispose();
+  }
+
   Future<void> saveProduct() async {
-    final name = nameController.text.trim();
-    final priceText = priceController.text.trim();
-    final category = categoryController.text.trim();
-
-    String imageUrl = imageController.text.trim();
-
-    if (name.isEmpty || priceText.isEmpty || category.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Name, Price and Category are required'),
-        ),
-      );
+    if (!_formKey.currentState!.validate()) {
       return;
-    }
-
-    final price = double.tryParse(priceText);
-
-    if (price == null || price <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid price'),
-        ),
-      );
-      return;
-    }
-
-    // Default image if user leaves image field empty
-    if (imageUrl.isEmpty) {
-      imageUrl =
-          'https://via.placeholder.com/150';
     }
 
     setState(() {
@@ -59,26 +60,31 @@ class _AddProductPageState extends State<AddProductPage> {
     try {
       final product = ProductModel(
         id: '',
-        name: name,
-        price: price,
-        imageUrl: imageUrl,
-        category: category,
-        description: '',
-        discount: 0,
+        name: nameController.text.trim(),
+        description: descriptionController.text.trim(),
+        price: double.parse(priceController.text.trim()),
+        imageUrl: imageController.text.trim(),
+        category: selectedCategory,
+        discount: double.tryParse(
+              discountController.text.trim(),
+            ) ??
+            0,
+        rating: 4.5,
+        stock:
+            int.tryParse(stockController.text.trim()) ??
+                0,
+        isAvailable: isAvailable,
       );
 
-      await service.addProduct(product);
+      await _service.addProduct(product);
 
       if (!mounted) return;
 
-      nameController.clear();
-      priceController.clear();
-      categoryController.clear();
-      imageController.clear();
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Product Added Successfully'),
+          content: Text(
+            "Product Added Successfully",
+          ),
         ),
       );
 
@@ -88,7 +94,7 @@ class _AddProductPageState extends State<AddProductPage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: $e'),
+          content: Text(e.toString()),
         ),
       );
     } finally {
@@ -100,13 +106,18 @@ class _AddProductPageState extends State<AddProductPage> {
     }
   }
 
-  @override
-  void dispose() {
-    nameController.dispose();
-    priceController.dispose();
-    categoryController.dispose();
-    imageController.dispose();
-    super.dispose();
+  InputDecoration decoration(
+    String label,
+    IconData icon,
+  ) {
+    return InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon),
+      border: OutlineInputBorder(
+        borderRadius:
+            BorderRadius.circular(14),
+      ),
+    );
   }
 
   @override
@@ -115,61 +126,193 @@ class _AddProductPageState extends State<AddProductPage> {
       appBar: AppBar(
         title: const Text("Add Product"),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          padding: const EdgeInsets.all(18),
           children: [
-            TextField(
+
+            TextFormField(
               controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Product Name',
-                border: OutlineInputBorder(),
+              decoration: decoration(
+                "Product Name",
+                Icons.fastfood,
+              ),
+              validator: (v) {
+                if (v == null || v.isEmpty) {
+                  return "Enter product name";
+                }
+                return null;
+              },
+            ),
+
+            const SizedBox(height: 16),
+
+            TextFormField(
+              controller: descriptionController,
+              maxLines: 3,
+              decoration: decoration(
+                "Description",
+                Icons.description,
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
-            TextField(
+            TextFormField(
               controller: priceController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Price',
-                border: OutlineInputBorder(),
+              keyboardType:
+                  TextInputType.number,
+              decoration: decoration(
+                "Price",
+                Icons.attach_money,
+              ),
+              validator: (v) {
+                if (v == null || v.isEmpty) {
+                  return "Enter price";
+                }
+                return null;
+              },
+            ),
+
+            const SizedBox(height: 16),
+
+            TextFormField(
+              controller: discountController,
+              keyboardType:
+                  TextInputType.number,
+              decoration: decoration(
+                "Discount %",
+                Icons.discount,
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
-            TextField(
-              controller: categoryController,
-              decoration: const InputDecoration(
-                labelText: 'Category',
-                border: OutlineInputBorder(),
+            TextFormField(
+              controller: stockController,
+              keyboardType:
+                  TextInputType.number,
+              decoration: decoration(
+                "Stock",
+                Icons.inventory,
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
-            TextField(
+            DropdownButtonFormField<String>(
+              value: selectedCategory,
+              decoration: decoration(
+                "Category",
+                Icons.category,
+              ),
+              items: categories.map((e) {
+                return DropdownMenuItem(
+                  value: e,
+                  child: Text(e),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedCategory = value!;
+                });
+              },
+            ),
+
+            const SizedBox(height: 16),
+
+            TextFormField(
               controller: imageController,
-              decoration: const InputDecoration(
-                labelText: 'Image URL (Optional)',
-                border: OutlineInputBorder(),
+              decoration: decoration(
+                "Image URL",
+                Icons.image,
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+
+            if (imageController.text.isNotEmpty)
+              ClipRRect(
+                borderRadius:
+                    BorderRadius.circular(16),
+                child: Image.network(
+                  imageController.text,
+                  height: 180,
+                  fit: BoxFit.cover,
+                  errorBuilder:
+                      (_, __, ___) =>
+                          const SizedBox(),
+                ),
+              ),
+
+                          const SizedBox(height: 20),
+
+            SwitchListTile(
+              value: isAvailable,
+              title: const Text(
+                "Available",
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              subtitle: const Text(
+                "Show this product to customers",
+              ),
+              secondary: const Icon(
+                Icons.check_circle,
+                color: Colors.green,
+              ),
+              onChanged: (value) {
+                setState(() {
+                  isAvailable = value;
+                });
+              },
+            ),
+
+            const SizedBox(height: 30),
 
             SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: isLoading ? null : saveProduct,
-                child: isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text("Save Product"),
+              height: 55,
+              child: ElevatedButton.icon(
+                onPressed: isLoading
+                    ? null
+                    : saveProduct,
+                icon: isLoading
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child:
+                            CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Icon(Icons.save),
+                label: Text(
+                  isLoading
+                      ? "Saving..."
+                      : "Save Product",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.orange,
+                  foregroundColor:
+                      Colors.white,
+                  shape:
+                      RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(14),
+                  ),
+                ),
               ),
             ),
+
+            const SizedBox(height: 30),
           ],
         ),
       ),
