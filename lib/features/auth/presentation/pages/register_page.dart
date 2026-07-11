@@ -71,15 +71,18 @@ class _RegisterPageState extends State<RegisterPage> {
 
       // 2️⃣ Save user in Firestore
       await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .set({
-        'uid': userCredential.user!.uid,
-        'name': nameController.text.trim(),
-        'email': emailController.text.trim(),
-        'role': 'user',
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+    .collection('users')
+    .doc(userCredential.user!.uid)
+    .set({
+  'uid': userCredential.user!.uid,
+  'name': nameController.text.trim(),
+  'email': emailController.text.trim(),
+  'phone': '',
+  'address': '',
+  'photoUrl': '',
+  'role': 'user',
+  'createdAt': FieldValue.serverTimestamp(),
+});
 
       if (!mounted) return;
 

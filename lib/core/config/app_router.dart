@@ -1,113 +1,196 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:my_project26_fixed/features/admin/data/models/product_model.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/pages/add_product_page.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/pages/admin_dashboard_page.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/pages/edit_product_page.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/pages/product_list_page.dart';
-import 'package:my_project26_fixed/features/auth/presentation/pages/register_page.dart';
+
 import 'package:my_project26_fixed/features/auth/presentation/pages/login_page.dart';
+import 'package:my_project26_fixed/features/auth/presentation/pages/register_page.dart';
+
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/cart/presentation/pages/cart_page.dart';
+
 import 'package:my_project26_fixed/features/checkout/domain/order_model.dart';
-import 'package:my_project26_fixed/features/checkout/presentation/pages/order_success_page.dart';
-import 'package:my_project26_fixed/features/navigation/presentation/pages/main_navigation_page.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/pages/checkout_page.dart';
+import 'package:my_project26_fixed/features/checkout/presentation/pages/order_success_page.dart';
+
+import 'package:my_project26_fixed/features/navigation/presentation/pages/main_navigation_page.dart';
+
 import 'package:my_project26_fixed/features/orders/pressentation/pages/admin_orders_page.dart';
 import 'package:my_project26_fixed/features/orders/pressentation/pages/my_orders_page.dart';
 import 'package:my_project26_fixed/features/orders/pressentation/pages/order_details_page.dart';
 
+import 'package:my_project26_fixed/features/profile/domain/user_profile_model.dart';
+import 'package:my_project26_fixed/features/profile/presentation/pages/edit_profile_page.dart';
+import 'package:my_project26_fixed/features/profile/presentation/pages/profile_page.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/login',
 
   redirect: (context, state) {
-  final user = FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
 
-  if (user == null) {
-    if (state.matchedLocation != '/login' &&
-        state.matchedLocation != '/register') {
-      return '/login';
+    final loggingIn =
+        state.matchedLocation == '/login' ||
+        state.matchedLocation == '/register';
+
+    if (user == null) {
+      return loggingIn ? null : '/login';
     }
-    return null;
-  }
 
-  return null;
-},
+    if (loggingIn) {
+      return '/home';
+    }
+
+    return null;
+  },
 
   routes: [
+
+    /// ================= AUTH =================
+
     GoRoute(
       path: '/login',
+      name: 'login',
       builder: (context, state) => const LoginPage(),
     ),
+
     GoRoute(
       path: '/register',
+      name: 'register',
       builder: (context, state) => const RegisterPage(),
     ),
 
+    /// ================= HOME =================
+
     GoRoute(
-  path: '/home',
-  builder: (context, state) => const MainNavigationPage(),
-),
+      path: '/home',
+      name: 'home',
+      builder: (context, state) =>
+          const MainNavigationPage(),
+    ),
+
+    /// ================= CART =================
+
+    GoRoute(
+      path: '/cart',
+      name: 'cart',
+      builder: (context, state) =>
+          const CartPage(),
+    ),
+
+    GoRoute(
+      path: '/checkout',
+      name: 'checkout',
+      builder: (context, state) {
+
+        final items =
+            state.extra as List<CartModel>;
+
+        return CheckoutPage(
+          items: items,
+        );
+      },
+    ),
+
+    GoRoute(
+      path: '/order-success',
+      name: 'order-success',
+      builder: (context, state) =>
+          const OrderSuccessPage(),
+    ),
+
+    /// ================= USER ORDERS =================
+
+    GoRoute(
+      path: '/my-orders',
+      name: 'my-orders',
+      builder: (context, state) =>
+          const MyOrdersPage(),
+    ),
+
+    GoRoute(
+      path: '/order-details',
+      name: 'order-details',
+      builder: (context, state) {
+
+        final order =
+            state.extra as OrderModel;
+
+        return OrderDetailsPage(
+          order: order,
+        );
+      },
+    ),
+
+    /// ================= PROFILE =================
+
+    GoRoute(
+      path: '/profile',
+      name: 'profile',
+      builder: (context, state) =>
+          const ProfilePage(),
+    ),
+
+    GoRoute(
+      path: '/edit-profile',
+      name: 'edit-profile',
+      builder: (context, state) {
+
+        final user =
+            state.extra as UserProfileModel;
+
+        return EditProfilePage(
+          user: user,
+        );
+      },
+    ),
+
+    /// ================= ADMIN =================
 
     GoRoute(
       path: '/admin',
-      builder: (context, state) => const AdminDashboardPage(),
+      name: 'admin',
+      builder: (context, state) =>
+          const AdminDashboardPage(),
     ),
+
+    GoRoute(
+      path: '/products',
+      name: 'products',
+      builder: (context, state) =>
+          const ProductListPage(),
+    ),
+
     GoRoute(
       path: '/add-product',
-      builder: (context, state) => const AddProductPage(),
+      name: 'add-product',
+      builder: (context, state) =>
+          const AddProductPage(),
     ),
+
     GoRoute(
-      path: '/cart',
-      builder: (context, state) => const CartPage(),
-        ),GoRoute(
-      path: '/checkout',
+      path: '/edit-product',
+      name: 'edit-product',
       builder: (context, state) {
-        final items = state.extra as List<CartModel>;
 
-    return CheckoutPage(
-      items: items,
-    );
-  },
-),
-GoRoute(
-  path: '/order-success',
-  builder: (context, state) => const OrderSuccessPage(),
-),
-GoRoute(
-  path: '/my-orders',
-  name: 'my-orders',
-  builder: (context, state) => const MyOrdersPage(),
-),
+        final product =
+            state.extra as ProductModel;
 
-GoRoute(
-  path: '/order-details',
-  name: 'order-details',
-  builder: (context, state) {
-    final order = state.extra as OrderModel;
-    return OrderDetailsPage(order: order);
-  },
-),
-GoRoute(
-  path: '/admin-orders',
-  name: 'admin-orders',
-  builder: (context, state) => const AdminOrdersPage(),
-),
-GoRoute(
-  path: '/edit-product',
-  builder: (context, state) {
-    final product = state.extra as ProductModel;
+        return EditProductPage(
+          product: product,
+        );
+      },
+    ),
 
-    return EditProductPage(
-      product: product,
-    );
-  },
-),
-GoRoute(
-  path: '/products',
-  builder: (context, state) =>
-      const ProductListPage(),
-),
+    GoRoute(
+      path: '/admin-orders',
+      name: 'admin-orders',
+      builder: (context, state) =>
+          const AdminOrdersPage(),
+    ),
   ],
 );
