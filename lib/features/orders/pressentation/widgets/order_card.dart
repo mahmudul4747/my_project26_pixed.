@@ -33,13 +33,13 @@ class OrderCard extends StatelessWidget {
     final hour = date.hour % 12 == 0 ? 12 : date.hour % 12;
     final minute = date.minute.toString().padLeft(2, '0');
     final period = date.hour >= 12 ? 'PM' : 'AM';
-
     return '$day $month $year • ${hour.toString().padLeft(2, '0')}:$minute $period';
   }
 
   @override
   Widget build(BuildContext context) {
     final date = _formatDate(order.createdAt);
+    final shortId = order.id.length > 6 ? order.id.substring(0, 6) : order.id;
 
     return Card(
       elevation: 2,
@@ -139,8 +139,7 @@ class OrderCard extends StatelessWidget {
 
                   const Spacer(),
 
-                  Text(
-                    "#${order.id.substring(0, 6)}",
+                  Text("#$shortId",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),

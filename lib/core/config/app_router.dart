@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_project26_fixed/features/admin/data/models/product_model.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/pages/add_product_page.dart';
 import 'package:my_project26_fixed/features/admin/pressentation/pages/admin_dashboard_page.dart';
+import 'package:my_project26_fixed/features/admin/pressentation/pages/edit_product_page.dart';
+import 'package:my_project26_fixed/features/admin/pressentation/pages/product_list_page.dart';
 import 'package:my_project26_fixed/features/auth/presentation/pages/register_page.dart';
 import 'package:my_project26_fixed/features/auth/presentation/pages/login_page.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
@@ -90,6 +93,21 @@ GoRoute(
   path: '/admin-orders',
   name: 'admin-orders',
   builder: (context, state) => const AdminOrdersPage(),
+),
+GoRoute(
+  path: '/edit-product',
+  builder: (context, state) {
+    final product = state.extra as ProductModel;
+
+    return EditProductPage(
+      product: product,
+    );
+  },
+),
+GoRoute(
+  path: '/products',
+  builder: (context, state) =>
+      const ProductListPage(),
 ),
   ],
 );

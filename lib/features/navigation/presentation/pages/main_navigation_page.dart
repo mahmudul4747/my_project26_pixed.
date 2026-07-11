@@ -5,7 +5,7 @@ import 'package:my_project26_fixed/features/navigation/providers/navigation_prov
 import 'package:my_project26_fixed/features/cart/presentation/pages/cart_page.dart';
 import 'package:my_project26_fixed/features/navigation/widgets/bottom_nav_bar.dart';
 import 'package:my_project26_fixed/features/orders/pressentation/pages/my_orders_page.dart';
-import 'package:my_project26_fixed/features/wishlist/presentation/pages/settings_page.dart';
+import 'package:my_project26_fixed/features/profile/presentation/pages/profile_page.dart';
 
 class MainNavigationPage extends ConsumerWidget {
   const MainNavigationPage({super.key});
