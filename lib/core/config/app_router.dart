@@ -12,6 +12,7 @@ import 'package:my_project26_fixed/features/auth/presentation/pages/register_pag
 
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/cart/presentation/pages/cart_page.dart';
+import 'package:my_project26_fixed/features/category/presentation/pages/add_category_page.dart';
 
 import 'package:my_project26_fixed/features/checkout/domain/order_model.dart';
 import 'package:my_project26_fixed/features/checkout/presentation/pages/checkout_page.dart';
@@ -192,5 +193,11 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) =>
           const AdminOrdersPage(),
     ),
+    GoRoute(
+  path: '/add-category',
+  name: 'add-category',
+  builder: (context, state) =>
+      const AddCategoryPage(),
+),
   ],
 );
