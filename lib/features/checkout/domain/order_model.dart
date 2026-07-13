@@ -54,12 +54,24 @@ class OrderModel {
     'total': total,
     'status': status,
     'createdAt': Timestamp.fromDate(createdAt),
-    'items': items.map((e) => (e as dynamic).toMap()).toList(),
+    'items': items.map((e) => e.toMap()).toList(),
   };
 }
 
   factory OrderModel.fromFirestore(DocumentSnapshot doc) {
   final map = doc.data() as Map<String, dynamic>;
+
+  final created = map['createdAt'];
+
+  DateTime createdAt;
+
+  if (created is Timestamp) {
+    createdAt = created.toDate();
+  } else if (created is String) {
+    createdAt = DateTime.tryParse(created) ?? DateTime.now();
+  } else {
+    createdAt = DateTime.now();
+  }
 
   return OrderModel(
     id: doc.id,
@@ -74,8 +86,8 @@ class OrderModel {
     discount: (map['discount'] ?? 0).toDouble(),
     total: (map['total'] ?? 0).toDouble(),
     status: map['status'] ?? 'Pending',
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    items: (map['items'] as List)
+    createdAt: createdAt,
+    items: (map['items'] as List? ?? [])
         .map(
           (e) => OrderItemModel.fromMap(
             e as Map<String, dynamic>,

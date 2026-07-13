@@ -128,17 +128,18 @@ ScaffoldMessenger.of(context).showSnackBar(
     duration: Duration(seconds: 2),
   ),);
   } catch (e, stackTrace) {
-  debugPrint('Order placement failed: $e');
-  debugPrint('$stackTrace');
+  debugPrint("========== ORDER ERROR ==========");
+  debugPrint(e.toString());
+  debugPrint(stackTrace.toString());
 
   if (!mounted) return;
 
   ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text("Failed to place order. Please try again."),
+    SnackBar(
+      content: Text(e.toString()),
     ),
   );
-} finally {
+}finally {
     if (mounted) {
       setState(() {
         isPlacingOrder = false;

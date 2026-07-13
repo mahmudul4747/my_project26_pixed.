@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_project26_fixed/core/services/fcm_token_service.dart';
 import 'package:my_project26_fixed/features/auth/data/services/google_auth_service.dart';
 
 
@@ -39,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   context.go('/admin');
 } 
 else if (role == "user") {
+  await FcmTokenService().saveToken();
   context.go('/home');
 }
     else {

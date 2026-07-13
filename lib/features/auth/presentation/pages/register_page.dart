@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:my_project26_fixed/core/services/fcm_token_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -68,6 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+      await FcmTokenService().saveToken();
 
       // 2️⃣ Save user in Firestore
       await FirebaseFirestore.instance
