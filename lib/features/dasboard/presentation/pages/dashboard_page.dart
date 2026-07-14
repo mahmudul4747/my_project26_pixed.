@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_project26_fixed/features/admin/pressentation/providers/product_provider.dart';
+import 'package:my_project26_fixed/features/admin/presentation/providers/product_provider.dart';
 import 'package:my_project26_fixed/features/dasboard/presentation/widgets/category_section.dart';
 import 'package:my_project26_fixed/features/dasboard/presentation/widgets/dashboard_banner.dart';
 import 'package:my_project26_fixed/features/dasboard/presentation/widgets/dashboard_search.dart';

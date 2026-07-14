@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_project26_fixed/features/admin/pressentation/providers/product_provider.dart';
+import 'package:my_project26_fixed/features/admin/presentation/providers/product_provider.dart';
 import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/dasboard/presentation/widgets/food_card.dart';

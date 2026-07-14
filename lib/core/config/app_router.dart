@@ -2,11 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_project26_fixed/features/admin/data/models/product_model.dart';
-import 'package:my_project26_fixed/features/admin/pressentation/pages/add_product_page.dart';
-import 'package:my_project26_fixed/features/admin/pressentation/pages/admin_dashboard_page.dart';
-import 'package:my_project26_fixed/features/admin/pressentation/pages/edit_product_page.dart';
-import 'package:my_project26_fixed/features/admin/pressentation/pages/product_list_page.dart';
-
+import 'package:my_project26_fixed/features/admin/presentation/pages/add_product_page.dart';
+import 'package:my_project26_fixed/features/admin/presentation/pages/admin_dashboard_page.dart';
+import 'package:my_project26_fixed/features/admin/presentation/pages/edit_product_page.dart';
+import 'package:my_project26_fixed/features/admin/presentation/pages/product_list_page.dart';
 import 'package:my_project26_fixed/features/auth/presentation/pages/login_page.dart';
 import 'package:my_project26_fixed/features/auth/presentation/pages/register_page.dart';
 
@@ -149,50 +148,41 @@ final GoRouter appRouter = GoRouter(
         );
       },
     ),
+/// ================= ADMIN =================
 
-    /// ================= ADMIN =================
+GoRoute(
+  path: '/admin',
+  name: 'admin',
+  builder: (context, state) => const AdminDashboardPage(),
+),
 
-    GoRoute(
-      path: '/admin',
-      name: 'admin',
-      builder: (context, state) =>
-          const AdminDashboardPage(),
-    ),
+GoRoute(
+  path: '/admin/products',
+  name: 'admin-products',
+  builder: (context, state) => const ProductListPage(),
+),
 
-    GoRoute(
-      path: '/products',
-      name: 'products',
-      builder: (context, state) =>
-          const ProductListPage(),
-    ),
+GoRoute(
+  path: '/admin/orders',
+  name: 'admin-orders',
+  builder: (context, state) => const AdminOrdersPage(),
+),
 
-    GoRoute(
-      path: '/add-product',
-      name: 'add-product',
-      builder: (context, state) =>
-          const AddProductPage(),
-    ),
+GoRoute(
+  path: '/admin/add-product',
+  name: 'admin-add-product',
+  builder: (context, state) => const AddProductPage(),
+),
 
-    GoRoute(
-      path: '/edit-product',
-      name: 'edit-product',
-      builder: (context, state) {
+GoRoute(
+  path: '/admin/edit-product',
+  name: 'admin-edit-product',
+  builder: (context, state) {
+    final product = state.extra as ProductModel;
 
-        final product =
-            state.extra as ProductModel;
-
-        return EditProductPage(
-          product: product,
-        );
-      },
-    ),
-
-    GoRoute(
-      path: '/admin-orders',
-      name: 'admin-orders',
-      builder: (context, state) =>
-          const AdminOrdersPage(),
-    ),
+    return EditProductPage(product: product);
+  },
+),
     GoRoute(
   path: '/add-category',
   name: 'add-category',

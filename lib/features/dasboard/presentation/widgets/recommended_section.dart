@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:my_project26_fixed/features/admin/pressentation/providers/product_provider.dart';
+import 'package:my_project26_fixed/features/admin/presentation/providers/product_provider.dart';
 import 'package:my_project26_fixed/features/cart/cart_provider.dart';
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
 import 'package:my_project26_fixed/features/dasboard/presentation/pages/product_details_page.dart';
@@ -47,7 +47,8 @@ class RecommendedSection extends ConsumerWidget {
 
           products.when(
             data: (items) {
-              final filteredItems = items.where((product) {
+              final filteredItems = items
+              .where((product) {
   final matchSearch =
       product.name.toLowerCase().contains(search) ||
       product.category.toLowerCase().contains(search);
