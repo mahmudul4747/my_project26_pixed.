@@ -389,16 +389,17 @@ class _LoginPageState extends State<LoginPage> {
               Center(
                 child: Image.asset(
                   "assets/assets/images/logo11.png",
-                  width: 190,
+                  width: 250,
+                  
                 ),
               ),
 
-              const SizedBox(height: 12),
+              const SizedBox(height: 6),
 
               const Text(
                 "Welcome Back!",
                 style: TextStyle(
-                  fontSize: 36,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Color(0xff1F2937),
                 ),
@@ -703,7 +704,7 @@ class _LoginPageState extends State<LoginPage> {
                             const Text(
                               "Don't have an account?",
                               style: TextStyle(
-                                fontSize: 17,
+                                fontSize: 12,
                                 color: Colors.black87,
                               ),
                             ),
@@ -717,7 +718,7 @@ class _LoginPageState extends State<LoginPage> {
                                 style: TextStyle(
                                   color: Color(0xffFF3D00),
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: 14,
                                 ),
                               ),
                             ),
