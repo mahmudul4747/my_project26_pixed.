@@ -173,7 +173,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
           ),
                     /// Skip Button
           Positioned(
-            top: 50,
+            top: 20,
             right: 20,
             child: SafeArea(
               child: TextButton(

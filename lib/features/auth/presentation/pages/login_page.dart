@@ -389,7 +389,7 @@ class _LoginPageState extends State<LoginPage> {
               Center(
                 child: Image.asset(
                   "assets/assets/images/logo11.png",
-                  width: 250,
+                  width: 400,
                   
                 ),
               ),
@@ -400,8 +400,9 @@ class _LoginPageState extends State<LoginPage> {
                 "Welcome Back!",
                 style: TextStyle(
                   fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff1F2937),
+                  fontWeight: FontWeight.w900,
+                    letterSpacing: .5,
+                    color: Color(0xff1E293B),
                 ),
               ),
 
@@ -623,18 +624,31 @@ class _LoginPageState extends State<LoginPage> {
                                   ? const CircularProgressIndicator(
                                       color: Colors.white,
                                     )
-                                  : const Text(
-                                      "Login",
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight:
-                                            FontWeight.bold,
-                                        color: Colors.white,
+                                  : const Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+
+                                          Icon(
+                                            Icons.login_rounded,
+                                            color: Colors.white,
+                                          ),
+
+                                          SizedBox(width: 10),
+
+                                          Text(
+                                            "LOGIN",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1,
+                                            ),
+                                          ),
+
+                                        ],
                                       ),
-                                    ),
-                            ),
-                          ),
-                        ),
+                                          ),
+                                        ),
+                                      ),
 
                         const SizedBox(height: 28),
 
@@ -681,7 +695,7 @@ class _LoginPageState extends State<LoginPage> {
 
                             _socialButton(
                               image:
-                                  "assets/assets/images/facebook.png",
+                                  "assets/assets/images/5d.png",
                               onTap: () {},
                             ),
 
@@ -704,7 +718,7 @@ class _LoginPageState extends State<LoginPage> {
                             const Text(
                               "Don't have an account?",
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 14,
                                 color: Colors.black87,
                               ),
                             ),
