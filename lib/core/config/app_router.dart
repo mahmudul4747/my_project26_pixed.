@@ -7,6 +7,7 @@ import 'package:my_project26_fixed/features/admin/presentation/pages/admin_dashb
 import 'package:my_project26_fixed/features/admin/presentation/pages/edit_product_page.dart';
 import 'package:my_project26_fixed/features/admin/presentation/pages/product_list_page.dart';
 import 'package:my_project26_fixed/features/auth/presentation/pages/login_page.dart';
+import 'package:my_project26_fixed/features/auth/presentation/pages/onboarding_page.dart';
 import 'package:my_project26_fixed/features/auth/presentation/pages/register_page.dart';
 
 import 'package:my_project26_fixed/features/cart/domain/cart_model.dart';
@@ -28,29 +29,35 @@ import 'package:my_project26_fixed/features/profile/presentation/pages/edit_prof
 import 'package:my_project26_fixed/features/profile/presentation/pages/profile_page.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/login',
+  initialLocation: '/onboarding',
 
   redirect: (context, state) {
     final user = FirebaseAuth.instance.currentUser;
 
-    final loggingIn =
-        state.matchedLocation == '/login' ||
-        state.matchedLocation == '/register';
+    final publicPages =
+    state.matchedLocation == '/onboarding' ||
+    state.matchedLocation == '/login' ||
+    state.matchedLocation == '/register';
 
-    if (user == null) {
-      return loggingIn ? null : '/login';
-    }
+if (user == null) {
+  return publicPages ? null : '/login';
+}
 
-    if (loggingIn) {
-      return '/home';
-    }
-
+if (state.matchedLocation == '/onboarding' ||
+    state.matchedLocation == '/login' ||
+    state.matchedLocation == '/register') {
+  return '/home';
+}
     return null;
   },
 
   routes: [
 
     /// ================= AUTH =================
+   GoRoute(
+  path: '/onboarding',
+  builder: (context, state) => const OnboardingPage(),
+),
 
     GoRoute(
       path: '/login',
